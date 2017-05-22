@@ -52,10 +52,10 @@ start:
     ; Setear el bit PE del registro CR0
     mov eax,cr0
     or eax,1
-    mov cr0.eax
+    mov cr0,eax
 
     ; Saltar a modo protegido
-    
+
     ; Establecer selectores de segmentos
 
     ; Establecer la base de la pila
