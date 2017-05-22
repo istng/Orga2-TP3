@@ -30,6 +30,11 @@
 
 #define GDT_IDX_NULL_DESC           0
 
+#define GDT_CODIGO_0           8
+#define GDT_CODIGO_3           9
+#define GDT_DATA_0           10
+#define GDT_DATA_3           11
+
 /* Offsets en la gdt */
 /* -------------------------------------------------------------------------- */
 #define GDT_OFF_NULL_DESC           (GDT_IDX_NULL_DESC      << 3)
