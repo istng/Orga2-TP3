@@ -55,6 +55,12 @@ start:
     mov cr0,eax
 
     ; Saltar a modo protegido
+    jmp 0x40:modo_protegido
+    ; |    indice     | 000 (3bits) |
+    ; |     0x08      | 000 (3bits) |
+
+BITS 32
+modo_protegido:
 
     ; Establecer selectores de segmentos
 

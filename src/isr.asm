@@ -41,6 +41,8 @@ isrClock:            db '|/-\'
 ;; Rutina de atención de las EXCEPCIONES
 ;; -------------------------------------------------------------------------- ;;
 ISR 0
+ISR 1
+
 
 ;;
 ;; Rutina de atención del RELOJ
