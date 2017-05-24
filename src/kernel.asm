@@ -10,6 +10,11 @@ global start
 ;GDT:
 extern GDT_DESC
 
+;IDT:
+extern IDT_DESC
+; funcion inicializar IDT:
+extern idt_inicializar
+
 ;; Saltear seccion de datos
 jmp start
 
@@ -85,8 +90,10 @@ modo_protegido:
     ; Inicializar el scheduler
 
     ; Inicializar la IDT
+    call idt_inicializar
 
     ; Cargar IDT
+    lidt [IDT_DESC]
 
     ; Configurar controlador de interrupciones
 
@@ -106,4 +113,4 @@ modo_protegido:
 
 ;; -------------------------------------------------------------------------- ;;
 
-%include "a20.asm"
+%include "a20.asm" 
