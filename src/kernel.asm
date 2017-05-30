@@ -60,17 +60,31 @@ start:
     mov cr0,eax
 
     ; Saltar a modo protegido
-    jmp 0x40:modo_protegido
+    jmp 8<<3:modo_protegido
+      
+
     ; |    indice     | 000 (3bits) |
     ; |     0x08      | 000 (3bits) |
+    ; 01010 0000
 
 BITS 32
 modo_protegido:
 
     ; Establecer selectores de segmentos
 
-    ; Establecer la base de la pila
+    xchg bx, bx ; Breakpoint
 
+    mov ax,10<<3
+    mov ds,ax
+    mov ss,ax
+    mov es,ax
+    mov gs,ax
+    mov ax,12<<3
+    mov fs,ax
+
+    ; Establecer la base de la pila
+    mov ebp,0x27000
+    mov esp,0x27000
     ; Imprimir mensaje de bienvenida
 
     ; Inicializar pantalla

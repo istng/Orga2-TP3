@@ -26,7 +26,7 @@
 
 /* Indices en la gdt */
 /* -------------------------------------------------------------------------- */
-#define GDT_COUNT 12
+#define GDT_COUNT 13
 
 #define GDT_IDX_NULL_DESC           0
 
@@ -34,6 +34,7 @@
 #define GDT_CODIGO_3           9
 #define GDT_DATA_0           10
 #define GDT_DATA_3           11
+#define GDT_VIDEO            12
 
 /* Offsets en la gdt */
 /* -------------------------------------------------------------------------- */
