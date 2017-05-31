@@ -14,6 +14,7 @@ extern GDT_DESC
 extern IDT_DESC
 ; funcion inicializar IDT:
 extern idt_inicializar
+extern mmu_inicializar_dir_kernel
 
 ;; Saltear seccion de datos
 jmp start
@@ -92,11 +93,15 @@ modo_protegido:
     ; Inicializar el manejador de memoria
 
     ; Inicializar el directorio de paginas
-
+    call mmu_inicializar_dir_kernel
     ; Cargar directorio de paginas
-
+    xor eax,eax
+    mov eax,0x27000<<12 ; |  dir_pde | 000000000000 |
+    mov cr3, eax
     ; Habilitar paginacion
-
+    mov eax,cr0
+    or eax,0x80000000
+    mov cr0,eax
     ; Inicializar tss
 
     ; Inicializar tss de la tarea Idle
