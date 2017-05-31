@@ -31,7 +31,7 @@ void mmu_inicializar_dir_kernel() {
 
 	pd[0].present = 1;
 	pd[0].read_write = 1;
-	pd[0].user_supervisor = 1; ///??????
+	pd[0].user_supervisor = 0; ///??????
 	pd[0].plvl_writethr = 0;
 	pd[0].plvl_cachedisable = 0;
 	pd[0].accesed = 0;
@@ -39,7 +39,7 @@ void mmu_inicializar_dir_kernel() {
 	pd[0].pagesize = 0;
 	pd[0].global = 0; 
 	pd[0].disponible = 0; //??????????????????????????????????????????????????????
-	pd[0].direccion = 0x28000;
+	pd[0].direccion = 0x28000 >> 12; //20 bits altos de la direccion donde se encuentra a pde
 
 	
 
@@ -52,7 +52,7 @@ void mmu_inicializar_dir_kernel() {
 	{
 		pt[i].present = 1;
 		pt[i].read_write = 1;
-		pt[i].user_supervisor = 1; ///??????
+		pt[i].user_supervisor = 0; ///??????
 		pt[i].plvl_writethr = 0;
 		pt[i].plvl_cachedisable = 0;
 		pt[i].accesed = 0;

@@ -96,12 +96,14 @@ modo_protegido:
     call mmu_inicializar_dir_kernel
     ; Cargar directorio de paginas
     xor eax,eax
-    mov eax,0x27000<<12 ; |  dir_pde | 000000000000 |
+    mov eax,0x27000 ; |  dir_pde(20 bits altos) | 000000000000 |
     mov cr3, eax
     ; Habilitar paginacion
     mov eax,cr0
     or eax,0x80000000
+    xchg bx, bx ; Breakpoint
     mov cr0,eax
+
     ; Inicializar tss
 
     ; Inicializar tss de la tarea Idle

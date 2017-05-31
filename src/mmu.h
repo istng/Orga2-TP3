@@ -29,7 +29,7 @@ typedef struct str_pde_entry {
 	unsigned char	ignored:1;
 	unsigned char   pagesize:1;
 	unsigned char   global:1;
-	unsigned char   disponible:4;
+	unsigned char   disponible:3;
     unsigned int    direccion:20;
 
 } __attribute__((__packed__, aligned (4))) pde_entry;
@@ -50,7 +50,7 @@ typedef struct str_pte_entry {
 	unsigned char	dirty_bit:1;
 	unsigned char   page_table_attribute_index:1;
 	unsigned char   global:1;
-	unsigned char   disponible:4;
+	unsigned char   disponible:3;
     unsigned int    direccion:20;
 
 } __attribute__((__packed__, aligned (4))) pte_entry;
