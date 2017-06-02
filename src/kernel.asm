@@ -15,6 +15,7 @@ extern IDT_DESC
 ; funcion inicializar IDT:
 extern idt_inicializar
 extern mmu_inicializar_dir_kernel
+extern print_screen
 
 ;; Saltear seccion de datos
 jmp start
@@ -89,6 +90,7 @@ modo_protegido:
     ; Imprimir mensaje de bienvenida
 
     ; Inicializar pantalla
+    call print_screen
 
     ; Inicializar el manejador de memoria
 
@@ -103,7 +105,6 @@ modo_protegido:
     or eax,0x80000000
     xchg bx, bx ; Breakpoint
     mov cr0,eax
-
     ; Inicializar tss
 
     ; Inicializar tss de la tarea Idle
@@ -135,3 +136,6 @@ modo_protegido:
 ;; -------------------------------------------------------------------------- ;;
 
 %include "a20.asm" 
+
+
+    
