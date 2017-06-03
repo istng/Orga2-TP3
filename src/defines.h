@@ -44,4 +44,10 @@
 /* -------------------------------------------------------------------------- */
 #define VIDEO                   0x000B8000 /* direccion fisica del buffer de video */
 
+/* MMU */
+/* -------------------------------------------------------------------------- */
+#define INICIO_PAGINAS_LIBRES   0x28000 /* Tablas de paginas Kernel */
+#define PAGE_SIZE   0x1000 /* 4 KB */
+
+
 #endif  /* !__DEFINES_H__ */

@@ -5,19 +5,7 @@
   definicion de funciones del manejador de memoria
 */
 
-
-
-
-
-
-
-
-
-
-
-
 #include "mmu.h"
-
 
 unsigned int proxima_pagina_libre;
 
@@ -31,15 +19,15 @@ unsigned int mmu_proxima_pagina_fisica_libre() {
 	return pagina_libre;
 }
 
-void mmu_mappear_pagina(unsigned int virtual,unsigned int dir_pd,unsigned int fisica){
+void mmu_mappear_pagina(unsigned int virtual, unsigned int dir_pd, unsigned int fisica){
 	
 	unsigned int offset_directorio = virtual>>22;
 	unsigned int offset_tabla = (virtual<<10)>>22;
-	unsigned int pagina_libre = mmu_proxima_pagina_fisica_libre(); //??????????????????
+	unsigned int pagina_libre = mmu_proxima_pagina_fisica_libre();
+	unsigned int i;
 
 	pde_entry* pd = (pde_entry*)dir_pd;
 	pte_entry* pt = (pte_entry*)pagina_libre;
-
 
 	pd[offset_directorio].present = 1;
 	pd[offset_directorio].read_write = 1;
@@ -82,12 +70,10 @@ void mmu_unmapear_pagina(unsigned int virtual, unsigned int cr3){
 	unsigned int offset_tabla = (virtual<<10)>>22;
 
 	pde_entry* pd = (pde_entry*)cr3;
-	pte_entry* pt = (pte_entry*)pd[offset_directorio];
+	pte_entry* pt = (pte_entry*) (unsigned int)(pd[offset_directorio].direccion);
 
 	pt[offset_tabla].present = 0;
 }
-
-
 
 
 void mmu_inicializar_dir_kernel() {
@@ -108,7 +94,6 @@ void mmu_inicializar_dir_kernel() {
 	pd[0].direccion = 0x28000 >> 12; //20 bits altos de la direccion donde se encuentra a pde
 
 	
-
 	int i;for (i = 1; i < 1024; ++i)
 	{
 		pd[i].present = 0;
@@ -127,11 +112,5 @@ void mmu_inicializar_dir_kernel() {
 		pt[i].global = 0; 
 		pt[i].disponible = 0; //??????????????????????????????????????????????????????
 		pt[i].direccion = i;
-
 	}	
-
 }
-
-
-
-

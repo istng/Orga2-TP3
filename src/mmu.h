@@ -14,7 +14,6 @@
 #include "game.h"
 
 
-
 /********************************/
 /******** PDE entry *************/
 /********************************/
@@ -33,7 +32,6 @@ typedef struct str_pde_entry {
     unsigned int    direccion:20;
 
 } __attribute__((__packed__, aligned (4))) pde_entry;
-
 
 
 /********************************/
@@ -56,13 +54,9 @@ typedef struct str_pte_entry {
 } __attribute__((__packed__, aligned (4))) pte_entry;
 
 
-
-
 void mmu_inicializar();
+void mmu_mappear_pagina(unsigned int virtual, unsigned int dir_pd, unsigned int fisica);
+void mmu_unmapear_pagina(unsigned int virtual, unsigned int cr3);
 void mmu_inicializar_dir_kernel();
 
 #endif	/* !__MMU_H__ */
-
-
-
-
