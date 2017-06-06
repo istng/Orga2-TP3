@@ -21,6 +21,7 @@ extern mmu_unmapear_pagina
 ; funcion para pintar la pantalla
 extern print_screen
 
+
 ;; Saltear seccion de datos
 jmp start
 
@@ -32,6 +33,8 @@ iniciando_mr_len equ    $ - iniciando_mr_msg
 
 iniciando_mp_msg db     'Iniciando kernel (Modo Protegido)...'
 iniciando_mp_len equ    $ - iniciando_mp_msg
+
+
 
 ;;
 ;; Seccion de código.
@@ -150,3 +153,40 @@ modo_protegido:
 ;; -------------------------------------------------------------------------- ;;
 
 %include "a20.asm" 
+
+
+;print_screen:
+;    push r12
+;    push r13
+;    push r14
+;
+;    mov r12,0x000B8000
+;    mov r13,0x0000
+;    mov r14,0x2020
+;
+;    mov rcx,80
+;    .ciclo_col:
+;        push rcx
+;        mov [r12],r13w            ; movemos a la posicion del puntero el valor correp. al color negro 
+;        add r12,2                   ; movemos el puntero 2 bytes  
+;        mov rcx,48
+;        .ciclo_filas:
+;            mov [r12], r14w       ; movemos a la posicion del puntero el valor correp. al color negro 
+;            add r12,2
+;            loop .ciclo_filas
+;        pop rcx
+;        mov [r12],r13w            ; movemos a la posicion del puntero el valor correp. al color negro  
+;        add r12,2                   ; movemos el puntero 2 bytes  
+;        loop .ciclo_col
+;    
+;    pop r13
+;    pop r12
+;    ret
+             
+
+
+
+
+
+
+
