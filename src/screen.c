@@ -51,7 +51,8 @@ void print_int(unsigned int n, unsigned int x, unsigned int y, unsigned short at
     p[y][x].a = attr;
 }
 
-void print_screen(  /* ?? no pasamos nada pues usamos define */ ){
+/*
+void print_screen(){
     ca (*p)[VIDEO_COLS] = (ca (*)[VIDEO_COLS]) VIDEO; // magia || arreglo de filas
     int i,j;
     for (i = 0; i < VIDEO_FILS;++i){
@@ -61,7 +62,7 @@ void print_screen(  /* ?? no pasamos nada pues usamos define */ ){
         }
     }
 }
-
+*/
 
 
 

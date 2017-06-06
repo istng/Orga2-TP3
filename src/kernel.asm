@@ -19,7 +19,7 @@ extern mmu_inicializar_dir_kernel
 extern mmu_mappear_pagina
 extern mmu_unmapear_pagina
 ; funcion para pintar la pantalla
-extern print_screen
+;extern print_screen
 
 
 ;; Saltear seccion de datos
@@ -96,7 +96,7 @@ modo_protegido:
 
     ; Inicializar pantalla
     xchg bx, bx ; Breakpoint
-    call print_screen
+    call print_screen_asm
 
     ; Inicializar el manejador de memoria
 
@@ -154,34 +154,36 @@ modo_protegido:
 
 %include "a20.asm" 
 
+BITS 32
+print_screen_asm:
+    push eax
+    push edi
+    push edx
 
-;print_screen:
-;    push r12
-;    push r13
-;    push r14
-;
-;    mov r12,0x000B8000
-;    mov r13,0x0000
-;    mov r14,0x2020
-;
-;    mov rcx,80
-;    .ciclo_col:
-;        push rcx
-;        mov [r12],r13w            ; movemos a la posicion del puntero el valor correp. al color negro 
-;        add r12,2                   ; movemos el puntero 2 bytes  
-;        mov rcx,48
-;        .ciclo_filas:
-;            mov [r12], r14w       ; movemos a la posicion del puntero el valor correp. al color negro 
-;            add r12,2
-;            loop .ciclo_filas
-;        pop rcx
-;        mov [r12],r13w            ; movemos a la posicion del puntero el valor correp. al color negro  
-;        add r12,2                   ; movemos el puntero 2 bytes  
-;        loop .ciclo_col
-;    
-;    pop r13
-;    pop r12
-;    ret
+    xor eax, eax
+    mov eax,0xB8000
+    mov edi,0x0000
+    mov edx,0x2020
+
+    mov ecx,50
+    .ciclo_col:
+        push ecx
+        mov [eax],di            ; movemos a la posicion del puntero el valor correp. al color negro 
+        add eax,2                   ; movemos el puntero 2 bytes  
+        mov ecx,78
+        .ciclo_filas:
+            mov [eax], dx       ; movemos a la posicion del puntero el valor correp. al color negro 
+            add eax,2
+            loop .ciclo_filas
+        mov [eax],di            ; movemos a la posicion del puntero el valor correp. al color negro  
+        add eax,2                   ; movemos el puntero 2 bytes  
+        pop ecx
+        loop .ciclo_col
+    
+    pop edx
+    pop edi
+    pop eax
+    ret
              
 
 
