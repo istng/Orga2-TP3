@@ -21,6 +21,9 @@ extern mmu_unmapear_pagina
 ; funcion para pintar la pantalla
 ;extern print_screen
 
+; funciones pic
+extern resetear_pic 
+extern habilitar_pic 
 
 ;; Saltear seccion de datos
 jmp start
@@ -95,7 +98,6 @@ modo_protegido:
     imprimir_texto_mp iniciando_mp_msg, iniciando_mp_len, 0x07, 2, 0
 
     ; Inicializar pantalla
-    xchg bx, bx ; Breakpoint
     call print_screen_asm
 
     ; Inicializar el manejador de memoria
@@ -111,15 +113,12 @@ modo_protegido:
     ; Habilitar paginacion
     mov eax,cr0
     or eax,0x80000000
-    xchg bx, bx ; Breakpoint
     mov cr0,eax
 
     push 0x9832000  ; test para ver si funciona maper_pagina (usar comando info tab)
     push 0x27000
     push 0x5989000
-    xchg bx, bx ; Breakpoint
     call mmu_mappear_pagina
-    xchg bx, bx ; Breakpoint
     add esp, 12     ; "pop" de los parametros
     
     ; Inicializar tss
@@ -135,6 +134,13 @@ modo_protegido:
     lidt [IDT_DESC]
 
     ; Configurar controlador de interrupciones
+    xchg bx, bx ; Breakpoint
+    call resetear_pic ; remapeamos pic (teclado a 33 y reloj a 32) a IDT
+    call habilitar_pic 
+    sti
+
+
+
 
     ; Cargar tarea inicial
 

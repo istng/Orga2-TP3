@@ -63,6 +63,53 @@ void idt_inicializar() {
     IDT_ENTRY(17);
     IDT_ENTRY(18);
     IDT_ENTRY(19);
+    
+    // Entrada interrupcion reloj
+    IDT_ENTRY(32);
+    // Entrada interrupcion teclado
+    IDT_ENTRY(33);
+
+    // Entrada interrupcion de software
+    //IDT_ENTRY(0x66); chequear
 
 
+}
+
+
+//HACER UN .C QUE SEA DE AUXILIARES!!!!!!! (mover también del .h)
+char convert_tecla(char scan_code) {
+    char ascii = 0;
+    switch(scan_code) {
+        case 0x11:
+            ascii = 'W';
+            break;
+        case 0x1E:
+            ascii = 'A';
+            break;
+        case 0x1F:
+            ascii = 'S';
+            break;
+        case 0x20:
+            ascii = 'D';
+            break;
+        case 0x2A:
+            ascii = '<';   //left shift
+            break;
+        case 0x17:
+            ascii = 'I';
+            break;
+        case 0x24:
+            ascii = 'J';
+            break;
+        case 0x25:
+            ascii = 'K';
+            break;        
+        case 0x26:
+            ascii = 'L';
+            break;
+        case 0x36:
+            ascii = '>';   //right shift
+            break;
+    }
+    return ascii;
 }

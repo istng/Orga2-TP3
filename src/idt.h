@@ -28,5 +28,8 @@ extern idt_descriptor IDT_DESC;
 
 void idt_inicializar();
 
+//AUXILIARES A PASAR
+char convert_tecla(char scan_code);
+
 
 #endif  /* !__IDT_H__ */

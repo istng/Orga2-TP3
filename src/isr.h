@@ -29,4 +29,7 @@ void _isr17();
 void _isr18();
 void _isr19();
 
+void _isr32(); // Interrupcion de Reloj
+void _isr33(); // Interrupcion de Teclado
+
 #endif  /* !__ISR_H__ */
