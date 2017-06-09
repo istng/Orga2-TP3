@@ -19,7 +19,7 @@ extern mmu_inicializar_dir_kernel
 extern mmu_mappear_pagina
 extern mmu_unmapear_pagina
 ; funcion para pintar la pantalla
-;extern print_screen
+extern print_screen
 
 ; funciones pic
 extern resetear_pic 
@@ -98,7 +98,7 @@ modo_protegido:
     imprimir_texto_mp iniciando_mp_msg, iniciando_mp_len, 0x07, 2, 0
 
     ; Inicializar pantalla
-    call print_screen_asm
+    call print_screen
 
     ; Inicializar el manejador de memoria
 
