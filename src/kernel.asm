@@ -18,12 +18,13 @@ extern idt_inicializar
 extern mmu_inicializar_dir_kernel
 extern mmu_mappear_pagina
 extern mmu_unmapear_pagina
+extern mmu_inicializar_dir_zombi
 ; funcion para pintar la pantalla
 extern print_screen
 
 ; funciones pic
-extern resetear_pic 
-extern habilitar_pic 
+extern resetear_pic
+extern habilitar_pic
 
 ;; Saltear seccion de datos
 jmp start
@@ -72,7 +73,7 @@ start:
 
     ; Saltar a modo protegido
     jmp 8<<3:modo_protegido
-      
+
 
     ; |    indice     | 000 (3bits) |
     ; |     0x08      | 000 (3bits) |
@@ -120,7 +121,13 @@ modo_protegido:
     push 0x5989000
     call mmu_mappear_pagina
     add esp, 12     ; "pop" de los parametros
-    
+
+    ;push 1  ; test para ver si funciona mmu_incializar_dir_zombi
+    ;push 32
+    ;push 20
+    ;call mmu_inicializar_dir_zombi
+    ;add esp, 12     ; "pop" de los parametros
+    xchg bx, bx ; Breakpoint
     ; Inicializar tss
 
     ; Inicializar tss de la tarea Idle
@@ -134,9 +141,8 @@ modo_protegido:
     lidt [IDT_DESC]
 
     ; Configurar controlador de interrupciones
-    xchg bx, bx ; Breakpoint
     call resetear_pic ; remapeamos pic (teclado a 33 y reloj a 32) a IDT
-    call habilitar_pic 
+    call habilitar_pic
     sti
 
 
@@ -158,7 +164,7 @@ modo_protegido:
 
 ;; -------------------------------------------------------------------------- ;;
 
-%include "a20.asm" 
+%include "a20.asm"
 
 BITS 32
 print_screen_asm:
@@ -174,27 +180,19 @@ print_screen_asm:
     mov ecx,50
     .ciclo_col:
         push ecx
-        mov [eax],di            ; movemos a la posicion del puntero el valor correp. al color negro 
-        add eax,2                   ; movemos el puntero 2 bytes  
+        mov [eax],di            ; movemos a la posicion del puntero el valor correp. al color negro
+        add eax,2                   ; movemos el puntero 2 bytes
         mov ecx,78
         .ciclo_filas:
-            mov [eax], dx       ; movemos a la posicion del puntero el valor correp. al color negro 
+            mov [eax], dx       ; movemos a la posicion del puntero el valor correp. al color negro
             add eax,2
             loop .ciclo_filas
-        mov [eax],di            ; movemos a la posicion del puntero el valor correp. al color negro  
-        add eax,2                   ; movemos el puntero 2 bytes  
+        mov [eax],di            ; movemos a la posicion del puntero el valor correp. al color negro
+        add eax,2                   ; movemos el puntero 2 bytes
         pop ecx
         loop .ciclo_col
-    
+
     pop edx
     pop edi
     pop eax
     ret
-             
-
-
-
-
-
-
-

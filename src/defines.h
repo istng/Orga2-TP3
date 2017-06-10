@@ -48,6 +48,7 @@
 /* -------------------------------------------------------------------------- */
 #define INICIO_PAGINAS_LIBRES   0x28000 /* Tablas de paginas Kernel */
 #define PAGE_SIZE   0x1000 /* 4 KB */
+#define DIR_TAREAS   0x08000000 /* Inicio de paginas de tareas */
 
 
 #endif  /* !__DEFINES_H__ */
