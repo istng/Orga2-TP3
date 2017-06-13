@@ -26,8 +26,14 @@ extern print_screen
 extern resetear_pic
 extern habilitar_pic
 
+; TSS
+extern tss_inicializar
+
+
 ;; Saltear seccion de datos
 jmp start
+
+
 
 ;;
 ;; Seccion de datos.
@@ -127,10 +133,11 @@ modo_protegido:
     ;push 20
     ;call mmu_inicializar_dir_zombi
     ;add esp, 12     ; "pop" de los parametros
-    xchg bx, bx ; Breakpoint
     ; Inicializar tss
-
-    ; Inicializar tss de la tarea Idle
+    xchg bx, bx ; Breakpoint
+    call tss_inicializar
+    mov ax,13<<3;
+    ltr ax;:# poner en el latex ( usamos : y # )
 
     ; Inicializar el scheduler
 
@@ -144,11 +151,9 @@ modo_protegido:
     call resetear_pic ; remapeamos pic (teclado a 33 y reloj a 32) a IDT
     call habilitar_pic
     sti
-
-
-
-
     ; Cargar tarea inicial
+    jmp 14<<3:0
+
 
     ; Habilitar interrupciones
 
