@@ -30,6 +30,7 @@ extern habilitar_pic
 extern tss_inicializar
 
 
+
 ;; Saltear seccion de datos
 jmp start
 
@@ -122,6 +123,7 @@ modo_protegido:
     or eax,0x80000000
     mov cr0,eax
 
+    push 0
     push 0x9832000  ; test para ver si funciona maper_pagina (usar comando info tab)
     push 0x27000
     push 0x5989000
@@ -136,7 +138,6 @@ modo_protegido:
 
 
     ; Inicializar tss
-    xchg bx, bx ; Breakpoint
     call tss_inicializar
     mov ax,13<<3;
     ltr ax;:# poner en el latex ( usamos : y # )

@@ -20,11 +20,11 @@ unsigned int mmu_proxima_pagina_fisica_libre() {
 }
 
 
-void mmu_mappear_pagina(unsigned int virtual, unsigned int dir_pd, unsigned int fisica){
+void mmu_mappear_pagina(unsigned int virtual, unsigned int dir_pd, unsigned int fisica, unsigned int user_lvl){
 
 	unsigned int offset_directorio = virtual>>22;
 	unsigned int offset_tabla = (virtual<<10)>>22;
-	unsigned int i;
+	//unsigned int i;
 
 	pde_entry* pd = (pde_entry*)dir_pd;
 	pte_entry* pt;
@@ -41,7 +41,7 @@ void mmu_mappear_pagina(unsigned int virtual, unsigned int dir_pd, unsigned int 
 		unsigned int pagina_libre = mmu_proxima_pagina_fisica_libre(); // Pedimos una pagina para alocar la tabla
 		pd[offset_directorio].present = 1;
 		pd[offset_directorio].read_write = 1;
-		pd[offset_directorio].user_supervisor = 0;
+		pd[offset_directorio].user_supervisor = user_lvl;
 		pd[offset_directorio].plvl_writethr = 0;
 		pd[offset_directorio].plvl_cachedisable = 0;
 		pd[offset_directorio].accesed = 0;
@@ -51,12 +51,12 @@ void mmu_mappear_pagina(unsigned int virtual, unsigned int dir_pd, unsigned int 
 		pd[offset_directorio].disponible = 0;
 		pd[offset_directorio].direccion = pagina_libre >> 12; //20 bits altos de la direccion donde se encuentra a pde
 
-
 		pt = (pte_entry*) pagina_libre;
 		// Inicializamos la tabla
-		for (i = 0; i < 1024; ++i){
+		breakpoint();
+		/*for (i = 0; i < 1024; ++i){
 			pt[i].present = 0;
-		}
+		}*/
 	}
 
 
@@ -67,9 +67,10 @@ void mmu_mappear_pagina(unsigned int virtual, unsigned int dir_pd, unsigned int 
 	}
 	else{
 		// Si no ...
+		/*
 		pt[offset_tabla].present = 1;
 		pt[offset_tabla].read_write = 1;
-		pt[offset_tabla].user_supervisor = 0;
+		pt[offset_tabla].user_supervisor = user_lvl;
 		pt[offset_tabla].plvl_writethr = 0;
 		pt[offset_tabla].plvl_cachedisable = 0;
 		pt[offset_tabla].accesed = 0;
@@ -78,13 +79,15 @@ void mmu_mappear_pagina(unsigned int virtual, unsigned int dir_pd, unsigned int 
 		pt[offset_tabla].global = 0;
 		pt[offset_tabla].disponible = 0;
 		pt[offset_tabla].direccion = fisica>>12;
+
+		*/
 	}
 
 }
 
 
-
-void mmu_mappear_pagina_zombi(unsigned int virtual, unsigned int dir_pd, unsigned int fisica){
+/*
+void mmu_mappear_pagina(unsigned int virtual, unsigned int dir_pd, unsigned int fisica){
 
 	unsigned int offset_directorio = virtual>>22;
 	unsigned int offset_tabla = (virtual<<10)>>22;
@@ -119,6 +122,7 @@ void mmu_mappear_pagina_zombi(unsigned int virtual, unsigned int dir_pd, unsigne
 		for (i = 0; i < 1024; ++i){
 			pt[i].present = 0;
 		}
+
 
 	}
 	// (2) Buscamos la entrada de esa pagina en la tabla
@@ -132,7 +136,7 @@ void mmu_mappear_pagina_zombi(unsigned int virtual, unsigned int dir_pd, unsigne
 		pt[offset_tabla].read_write = 1;
 		// La gracia de esta funcion : PRIVILEGIOS
 		// -> tienen privilegios de user pues son de los zombies
-		pt[offset_tabla].user_supervisor = 1;
+		pt[offset_tabla].user_supervisor = 0;
 		pt[offset_tabla].plvl_writethr = 0;
 		pt[offset_tabla].plvl_cachedisable = 0;
 		pt[offset_tabla].accesed = 0;
@@ -143,7 +147,7 @@ void mmu_mappear_pagina_zombi(unsigned int virtual, unsigned int dir_pd, unsigne
 		pt[offset_tabla].direccion = fisica>>12;
 	}
 
-}
+}*/
 
 void mmu_unmapear_pagina(unsigned int virtual, unsigned int cr3){
 
@@ -225,8 +229,13 @@ void mappear_entorno_zombi(unsigned int i, unsigned int j, int jugador, unsigned
 	// Precondicion: el zombi no se mueve hacia la columna donde esta el jugador contrario.
 
 	unsigned int indices[9][2];
+	indices[0][0]=i;
+	indices[0][1]=j;
+
 	if (jugador){
 		// El movimiento lo realiza el jugador A
+
+
 
 		//Pagina 2:
 		indices[1][0] = i;
@@ -289,7 +298,9 @@ void mappear_entorno_zombi(unsigned int i, unsigned int j, int jugador, unsigned
 	for (k = 0; k < 9;++k){
 		unsigned int pag_virtual = DIR_TAREAS + k * PAGE_SIZE;
 		unsigned int pag_fisica = pos_a_dirMapa(indices[k][0],indices[k][1]);
-		mmu_mappear_pagina_zombi(pag_virtual,dir_pd,pag_fisica);
+		print_int(k,1,1,20);
+		mmu_mappear_pagina(pag_virtual,dir_pd,pag_fisica,1);
+		
 	}
 
 }
@@ -305,6 +316,7 @@ unsigned int mmu_inicializar_dir_zombi(unsigned int i, unsigned int j, int jugad
 	for (k = 0; k < 1024; ++k){
 		pd[k].present = 0;
 	}
+
 
 	// mapeamos el entorno del zombie
 	mappear_entorno_zombi(i,j,jugador,(unsigned int)pd);
