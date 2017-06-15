@@ -54,5 +54,6 @@ typedef struct str_tss {
 } __attribute__((__packed__, aligned (8))) tss;
 
 void tss_inicializar();
+void tss_zombies(unsigned int indice);
 
 #endif  /* !__TSS_H__ */

@@ -123,19 +123,6 @@ modo_protegido:
     or eax,0x80000000
     mov cr0,eax
 
-    push 0
-    push 0x9832000  ; test para ver si funciona maper_pagina (usar comando info tab)
-    push 0x27000
-    push 0x5989000
-    call mmu_mappear_pagina
-    add esp, 12     ; "pop" de los parametros
-
-    push 1  ; jugador
-    push 20;
-    push 20
-    call mmu_inicializar_dir_zombi
-    add esp, 12; "pop" de los parametros
-
 
     ; Inicializar tss
     call tss_inicializar

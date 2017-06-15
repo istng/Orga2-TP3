@@ -26,7 +26,7 @@
 
 /* Indices en la gdt */
 /* -------------------------------------------------------------------------- */
-#define GDT_COUNT 15
+#define GDT_COUNT 50
 
 #define GDT_IDX_NULL_DESC           0
 
@@ -38,6 +38,8 @@
 
 #define TSS_Inicial 	     13
 #define TSS_Idle    	     14
+#define TSS_A                15
+#define TSS_B				 23
 
 /* Offsets en la gdt */
 /* -------------------------------------------------------------------------- */
