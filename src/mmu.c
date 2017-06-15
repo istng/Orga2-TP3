@@ -12,11 +12,13 @@ unsigned int proxima_pagina_libre;
 void mmu_inicializar() {
 	proxima_pagina_libre = INICIO_PAGINAS_LIBRES;
 }
+
 unsigned int mmu_proxima_pagina_fisica_libre() {
 	unsigned int pagina_libre = proxima_pagina_libre;
 	proxima_pagina_libre += PAGE_SIZE;
 	return pagina_libre;
 }
+
 
 void mmu_mappear_pagina(unsigned int virtual, unsigned int dir_pd, unsigned int fisica){
 
@@ -102,7 +104,7 @@ void mmu_mappear_pagina_zombi(unsigned int virtual, unsigned int dir_pd, unsigne
 		unsigned int pagina_libre = mmu_proxima_pagina_fisica_libre(); // Pedimos una pagina para alocar la tabla
 		pd[offset_directorio].present = 1;
 		pd[offset_directorio].read_write = 1;
-		pd[offset_directorio].user_supervisor = 1;
+		pd[offset_directorio].user_supervisor = 0;
 		pd[offset_directorio].plvl_writethr = 0;
 		pd[offset_directorio].plvl_cachedisable = 0;
 		pd[offset_directorio].accesed = 0;
@@ -293,16 +295,20 @@ void mappear_entorno_zombi(unsigned int i, unsigned int j, int jugador, unsigned
 }
 
 
-void mmu_inicializar_dir_zombi(unsigned int i, unsigned int j, int jugador){
+// Esta funcion crea el directorio y las tablas asociadas a este. Luego devuelve la direccion del directorio.
+
+unsigned int mmu_inicializar_dir_zombi(unsigned int i, unsigned int j, int jugador){
 	// Inicializamos un directorio para la tarea
  	pde_entry* pd = (pde_entry*) mmu_proxima_pagina_fisica_libre();
 
 	int k;
-	for (k = 1; k < 1024; ++k){
+	for (k = 0; k < 1024; ++k){
 		pd[k].present = 0;
 	}
 
 	// mapeamos el entorno del zombie
 	mappear_entorno_zombi(i,j,jugador,(unsigned int)pd);
+
+	return (unsigned int) pd;
 
 }

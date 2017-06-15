@@ -128,11 +128,13 @@ modo_protegido:
     call mmu_mappear_pagina
     add esp, 12     ; "pop" de los parametros
 
-    ;push 1  ; test para ver si funciona mmu_incializar_dir_zombi
-    ;push 32
-    ;push 20
-    ;call mmu_inicializar_dir_zombi
-    ;add esp, 12     ; "pop" de los parametros
+    push 1  ; jugador
+    push 20;
+    push 20
+    call mmu_inicializar_dir_zombi
+    add esp, 12; "pop" de los parametros
+
+
     ; Inicializar tss
     xchg bx, bx ; Breakpoint
     call tss_inicializar

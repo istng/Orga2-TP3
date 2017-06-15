@@ -62,6 +62,6 @@ void mmu_inicializar_dir_kernel();
 void mmu_mappear_pagina_zombi(unsigned int virtual, unsigned int dir_pd, unsigned int fisica);
 unsigned int pos_a_dirMapa(unsigned int i, unsigned int j);
 void mappear_entorno_zombi(unsigned int i, unsigned int j, int jugador, unsigned int dir_pd );
-void mmu_inicializar_dir_zombi(unsigned int i, unsigned int j, int jugador);
+unsigned int mmu_inicializar_dir_zombi(unsigned int i, unsigned int j, int jugador);
 
 #endif	/* !__MMU_H__ */
