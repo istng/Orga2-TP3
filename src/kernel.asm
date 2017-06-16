@@ -129,8 +129,11 @@ modo_protegido:
     mov ax,13<<3;
     ltr ax;:# poner en el latex ( usamos : y # )
 
-    ; Inicializar el scheduler
+    ; Inicializamos Zombies
+    call tss_zombies
 
+    ; Inicializar el scheduler
+    
     ; Inicializar la IDT
     call idt_inicializar
 
@@ -141,13 +144,11 @@ modo_protegido:
     call resetear_pic ; remapeamos pic (teclado a 33 y reloj a 32) a IDT
     call habilitar_pic
     sti
+
+    xchg bx, bx
     ; Cargar tarea inicial
     jmp 14<<3:0
 
-    ; Inicializamos Zombies
-    call tss_zombies
-
-    
     ; Habilitar interrupciones
 
     ; Saltar a la primera tarea: Idle

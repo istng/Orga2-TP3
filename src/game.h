@@ -11,6 +11,7 @@
 #include "screen.h"
 #include "mmu.h"
 
+
 typedef struct info_jugador {
 	unsigned int	jugador:1;				//hay dos jugadores
 	unsigned int 	pos:11;					//tamaño abritrario pero suficiente
@@ -33,7 +34,10 @@ typedef struct info_zombie {
 } __attribute__((__packed__, aligned (4))) info_zombie;
 
 
-
+info_jugador A; 
+info_jugador B;
+info_zombie zombiesA[8];
+info_zombie zombiesB[8];
 
 
 typedef enum direccion_e { IZQ = 0xAAA, DER = 0x441, ADE = 0x83D, ATR = 0x732 } direccion;

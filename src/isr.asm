@@ -27,7 +27,7 @@ extern convert_tecla
 ;; Definición de MACROS
 ;; -------------------------------------------------------------------------- ;;
 
-mensaje_intr db     'Interrupcion X'
+mensaje_intr db     'Interrupcion XYZ'
 mensaje_intr_len equ    $ - mensaje_intr
 
 %macro imprimir_interrupcion 1
@@ -35,9 +35,24 @@ mensaje_intr_len equ    $ - mensaje_intr
     mov al, %1
     mov ebx, mensaje_intr
     add ebx, mensaje_intr_len
+    dec ebx ; se reemplazara Z por la unidad del numero de interrupcion
+    mov cl, al
+    xor ax, ax
+    mov al, cl
+    mov dl, 10 ; divisor
+    div dl ; se divide por 10 para obtener la unidad
+    add ah, 48 ; 48 es el valor ASCII de 0, se le suma al resto de la division para obtener la unidad en ASCII
+    mov [ebx], ah
+    dec ebx ; se reemplazara Y por la decena del numero de interrupcion
+    mov cl, al
+    xor ax, ax
+    mov al, cl
+    div dl ; se vuelve a dividir por 10 para obtener la decena y la centena
+    add ah, 48
+    mov [ebx], ah ; se reemplaza Y por la decena del numero de interrupcion
     dec ebx
     add al, 48
-    mov [ebx], al
+    mov [ebx], al ; se reemplaza X por la centena del numero de interrupcion
     imprimir_texto_mp mensaje_intr, mensaje_intr_len, 0x07, 24, 34
 %endmacro
 
@@ -108,13 +123,16 @@ ISR 19
 ;;
 ;; Rutina de atención del RELOJ
 ;; -------------------------------------------------------------------------- ;;
-global _isr32_isr32:   
+global _isr32:
+_isr32: 
     pushad   
     
-    call proximo_reloj   
+    xchg bx, bx
+    imprimir_interrupcion 32
+    call proximo_reloj
     call sched_proximo_indice   
-    
-    cmp ax, 0   
+
+    cmp ax, 0
     je  .nojump      
     
     mov [sched_tarea_selector], ax      
@@ -171,5 +189,3 @@ proximo_reloj:
                 imprimir_texto_mp ebx, 1, 0x0f, 49, 79
                 popad
         ret
-        
-        
