@@ -28,10 +28,10 @@
 /* -------------------------------------------------------------------------- */
 #define GDT_COUNT 50
 
-#define GDT_IDX_NULL_DESC           0
+#define GDT_IDX_NULL_DESC     0
 
-#define GDT_CODIGO_0           8
-#define GDT_CODIGO_3           9
+#define GDT_CODIGO_0          8
+#define GDT_CODIGO_3          9
 #define GDT_DATA_0           10
 #define GDT_DATA_3           11
 #define GDT_VIDEO            12
@@ -54,6 +54,11 @@
 #define INICIO_PAGINAS_LIBRES   0x28000 /* Tablas de paginas Kernel */
 #define PAGE_SIZE   0x1000 /* 4 KB */
 #define DIR_TAREAS   0x08000000 /* Inicio de paginas de tareas */
+
+/* Game */
+/* -------------------------------------------------------------------------- */
+typedef enum jugador_e { JUGADOR_A, JUGADOR_B } jugador;
+typedef enum jugador_direccion_e { ARRIBA, ABAJO } jugador_direccion;
 
 
 #endif  /* !__DEFINES_H__ */

@@ -28,5 +28,9 @@ void print_int(unsigned int n, unsigned int x, unsigned int y, unsigned short at
 
 void print_screen();
 
+void print_jugador(jugador jug);
+
+void print_limpiar_pos_jugador(jugador jug);
+
 
 #endif  /* !__SCREEN_H__ */

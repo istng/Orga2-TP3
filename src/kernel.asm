@@ -31,6 +31,8 @@ extern tss_inicializar
 
 extern tss_zombies
 
+;Variables del juego
+extern inicializar_variables_juego
 
 ;; Saltear seccion de datos
 jmp start
@@ -106,8 +108,7 @@ modo_protegido:
     ; Imprimir mensaje de bienvenida
     imprimir_texto_mp iniciando_mp_msg, iniciando_mp_len, 0x07, 2, 0
 
-    ; Inicializar pantalla
-    call print_screen
+
 
     ; Inicializar el manejador de memoria
 
@@ -140,15 +141,21 @@ modo_protegido:
     ; Cargar IDT
     lidt [IDT_DESC]
 
+    xchg bx, bx
+
+    call inicializar_variables_juego
+    ; Inicializar pantalla, luego de haber cargado todas las estructuras, 
+    ; variables del juego pero antes de habilitar el controlador de interrupciones y cargar la tarea idle
+    call print_screen
+
     ; Configurar controlador de interrupciones
     call resetear_pic ; remapeamos pic (teclado a 33 y reloj a 32) a IDT
     call habilitar_pic
     sti
 
-    xchg bx, bx
     ; Cargar tarea inicial
     jmp 14<<3:0
-
+    
     ; Habilitar interrupciones
 
     ; Saltar a la primera tarea: Idle

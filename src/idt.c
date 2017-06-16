@@ -8,6 +8,7 @@
 #include "defines.h"
 #include "idt.h"
 #include "isr.h"
+#include "game.h"
 
 #include "tss.h"
 
@@ -112,4 +113,31 @@ char convert_tecla(char scan_code) {
             break;
     }
     return ascii;
+}
+
+
+void accion_tecla(char scan_code){
+    char tecla = convert_tecla(scan_code);
+    switch(tecla){
+        case 'W':
+            print_limpiar_pos_jugador(JUGADOR_A);
+            game_jugador_mover(JUGADOR_A, ARRIBA);
+            print_jugador(JUGADOR_A);
+            break;
+        case 'S':
+            print_limpiar_pos_jugador(JUGADOR_A);
+            game_jugador_mover(JUGADOR_A, ABAJO);
+            print_jugador(JUGADOR_A);
+            break;
+        case 'I':
+            print_limpiar_pos_jugador(JUGADOR_B);
+            game_jugador_mover(JUGADOR_B, ARRIBA);
+            print_jugador(JUGADOR_B);
+            break;
+        case 'K':
+            print_limpiar_pos_jugador(JUGADOR_B);
+            game_jugador_mover(JUGADOR_B, ABAJO);
+            print_jugador(JUGADOR_B);
+            break;
+    }
 }

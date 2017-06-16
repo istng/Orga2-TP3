@@ -20,6 +20,7 @@ extern sched_proximo_indice
 
 ;; Auxiliares
 extern convert_tecla
+extern accion_tecla
 
 
 
@@ -126,9 +127,7 @@ ISR 19
 global _isr32:
 _isr32: 
     pushad   
-    
-    xchg bx, bx
-    imprimir_interrupcion 32
+
     call proximo_reloj
     call sched_proximo_indice   
 
@@ -157,7 +156,11 @@ _isr33:
     pushad
     xor eax, eax
     in al, 0x60
+    push eax
+    call accion_tecla
+    pop eax
     imprimir_tecla al, 0, 79
+    call accion_tecla
     call fin_intr_pic1
 
     popad

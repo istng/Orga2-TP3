@@ -30,6 +30,7 @@ void idt_inicializar();
 
 //AUXILIARES A PASAR
 char convert_tecla(char scan_code);
+void accion_tecla(char scan_code);
 
 
 #endif  /* !__IDT_H__ */

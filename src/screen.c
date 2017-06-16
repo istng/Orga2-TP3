@@ -6,6 +6,7 @@
 */
 
 #include "screen.h"
+#include "game.h"
 
 void print(const char * text, unsigned int x, unsigned int y, unsigned short attr) {
     ca (*p)[VIDEO_COLS] = (ca (*)[VIDEO_COLS]) VIDEO;
@@ -149,9 +150,35 @@ void print_screen(){
 	p[46][60].c = 49;
 	p[46][60].a = C_FG_WHITE;	
 
+
+	// Agregamos los jugadores
+	print_jugador(JUGADOR_A);
+	print_jugador(JUGADOR_B);
 }
 
 
+void print_jugador(jugador jug){
+	switch(jug){
+		case JUGADOR_A:
+			print(&(A.zombie_seleccionado->ascii), 0, A.pos, C_FG_LIGHT_BLUE);
+			break;
+		case JUGADOR_B:
+			print(&(B.zombie_seleccionado->ascii), VIDEO_COLS-1, B.pos, C_FG_LIGHT_RED);
+			break;
+	}
+}
 
+
+void print_limpiar_pos_jugador(jugador jug){
+	char char_vacio[2] = {219, 0};
+	switch(jug){
+		case JUGADOR_A:
+			print(char_vacio, 0, A.pos, C_FG_RED);
+			break;
+		case JUGADOR_B:
+			print(char_vacio, VIDEO_COLS-1, B.pos, C_FG_BLUE);
+			break;
+	}
+}
 
 
