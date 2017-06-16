@@ -11,14 +11,15 @@
 #include "screen.h"
 #include "mmu.h"
 
-// La esctructura tipo_zombie tiene como objetivo formar una lista circular con 
-// los tres tipos de zombies para que resulte más sencillo cambiar el tipo de zombie
+// La esctructura tipo_zombie tiene como objetivo formar una lista circular doblemente enlazada 
+// con los tres tipos de zombies para que resulte más sencillo cambiar el tipo de zombie
 // seleccionado por el jugador
 // A su vez, info_jugador va a tener entre sus miembros un puntero a esta estructura
 
 typedef struct str_tipo_zombie {
 	char ascii;
-	struct tipo_zombie *siguiente_tipo_zombie;
+	struct str_tipo_zombie *siguiente_tipo_zombie;
+	struct str_tipo_zombie *anterior_tipo_zombie;
 } tipo_zombie;
 
 
@@ -27,7 +28,7 @@ typedef struct str_info_jugador {
 	unsigned int 	pos:11;					//tamaño abritrario pero suficiente
 	unsigned int 	puntos:11;				//tamaño abritrario pero suficiente
 	unsigned int 	zombies_usados:4; 	    //hay 8 zombies posibles por jugador
-	tipo_zombie *zombie_seleccionado;		//hay 3 tipos de zombies
+	tipo_zombie 	*zombie_seleccionado;	//hay 3 tipos de zombies
 	unsigned int 	ultimo_zombie:3;		//indice del ultimo zombie usado
 
 } info_jugador;
@@ -53,6 +54,8 @@ info_zombie zombiesB[8];
 typedef enum direccion_e { IZQ = 0xAAA, DER = 0x441, ADE = 0x83D, ATR = 0x732 } direccion;
 
 void game_jugador_mover(jugador jug, jugador_direccion dir);
+
+void game_jugador_cambiar_zombie(jugador jug, jugador_zombie_lista dir);
 
 void game_lanzar_zombi(unsigned int jugador);
 

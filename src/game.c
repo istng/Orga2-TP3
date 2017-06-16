@@ -11,9 +11,15 @@ info_jugador B;
 info_zombie zombiesA[8];
 info_zombie zombiesB[8];
 
-tipo_zombie zombie_guerrero = { (char) 'G', (struct tipo_zombie*) &zombie_mago};
-tipo_zombie zombie_mago 	= { (char) 'M', (struct tipo_zombie*) &zombie_clerigo};
-tipo_zombie zombie_clerigo 	= { (char) 'C', (struct tipo_zombie*) &zombie_guerrero};
+tipo_zombie zombie_guerrero = { (char) 'G', 
+								(struct str_tipo_zombie*) &zombie_mago, 
+								(struct str_tipo_zombie*) &zombie_clerigo};
+tipo_zombie zombie_mago 	= { (char) 'M', 
+								(struct str_tipo_zombie*) &zombie_clerigo, 
+								(struct str_tipo_zombie*) &zombie_guerrero};
+tipo_zombie zombie_clerigo 	= { (char) 'C', 
+								(struct str_tipo_zombie*) &zombie_guerrero, 
+								(struct str_tipo_zombie*) &zombie_mago};
 
 
 void inicializar_variables_juego(){
@@ -66,6 +72,32 @@ void game_jugador_mover(jugador jug, jugador_direccion dir) {
 			break;
 	}
 }
+
+void game_jugador_cambiar_zombie(jugador jug, jugador_zombie_lista dir){
+	switch(jug){
+		case JUGADOR_A:
+			switch(dir){
+				case ANTERIOR:
+					A.zombie_seleccionado = (A.zombie_seleccionado)->anterior_tipo_zombie;
+					break;
+				case SIGUIENTE:
+					A.zombie_seleccionado = A.zombie_seleccionado->siguiente_tipo_zombie;
+					break;
+			}
+			break;
+		case JUGADOR_B:
+			switch(dir){
+				case ANTERIOR:
+					B.zombie_seleccionado = B.zombie_seleccionado->anterior_tipo_zombie;
+					break;
+				case SIGUIENTE:
+					B.zombie_seleccionado = B.zombie_seleccionado->siguiente_tipo_zombie;
+					break;
+			}
+			break;
+	}
+}
+
 void game_lanzar_zombi(unsigned int jugador) {
 }
 void game_move_current_zombi(direccion dir) {

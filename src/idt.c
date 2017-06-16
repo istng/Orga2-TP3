@@ -124,9 +124,17 @@ void accion_tecla(char scan_code){
             game_jugador_mover(JUGADOR_A, ARRIBA);
             print_jugador(JUGADOR_A);
             break;
+        case 'A':
+            game_jugador_cambiar_zombie(JUGADOR_A, ANTERIOR);
+            print_jugador(JUGADOR_A);
+            break;
         case 'S':
             print_limpiar_pos_jugador(JUGADOR_A);
             game_jugador_mover(JUGADOR_A, ABAJO);
+            print_jugador(JUGADOR_A);
+            break;
+        case 'D':
+            game_jugador_cambiar_zombie(JUGADOR_A, SIGUIENTE);
             print_jugador(JUGADOR_A);
             break;
         case 'I':
@@ -134,9 +142,17 @@ void accion_tecla(char scan_code){
             game_jugador_mover(JUGADOR_B, ARRIBA);
             print_jugador(JUGADOR_B);
             break;
+        case 'J':
+            game_jugador_cambiar_zombie(JUGADOR_B, ANTERIOR);
+            print_jugador(JUGADOR_B);
+            break;
         case 'K':
             print_limpiar_pos_jugador(JUGADOR_B);
             game_jugador_mover(JUGADOR_B, ABAJO);
+            print_jugador(JUGADOR_B);
+            break;
+        case 'L':
+            game_jugador_cambiar_zombie(JUGADOR_B, SIGUIENTE);
             print_jugador(JUGADOR_B);
             break;
     }

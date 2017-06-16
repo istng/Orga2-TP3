@@ -59,6 +59,7 @@
 /* -------------------------------------------------------------------------- */
 typedef enum jugador_e { JUGADOR_A, JUGADOR_B } jugador;
 typedef enum jugador_direccion_e { ARRIBA, ABAJO } jugador_direccion;
+typedef enum jugador_zombie_lista_e { ANTERIOR, SIGUIENTE } jugador_zombie_lista;
 
 
 #endif  /* !__DEFINES_H__ */
