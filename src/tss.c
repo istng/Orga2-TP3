@@ -6,6 +6,7 @@
 */
 
 #include "tss.h"
+#include "mmu.h"
 
 tss tss_inicial;
 tss tss_idle;
@@ -41,10 +42,10 @@ void tss_inicializar() {
 
 }
 
-void tss_zombies(unsigned int indice){
+void tss_zombies(){
+	unsigned int i;
 
-
-	for (int i = 0; i < 8; ++i)
+	for (i = 0; i < 8; ++i)
 	{
 
 
@@ -53,13 +54,14 @@ void tss_zombies(unsigned int indice){
 		tss_zombisA[i].ebp    = 0x8001000;
 		tss_zombisA[i].cs     =  9<<3;
 		tss_zombisA[i].ss     = 11<<3;
+		tss_zombisA[i].ss0    = 10<<3;
 		tss_zombisA[i].ds     = 11<<3;
 		tss_zombisA[i].es     = 11<<3;
 		tss_zombisA[i].gs     = 11<<3;
 		tss_zombisA[i].fs     = 12<<3;
 		tss_zombisA[i].cr3    = mmu_inicializar_dir_zombi();
 		tss_zombisA[i].eflags = 0x00000202;
-		tss_zombisA[i].esp0 = mmu_inicializar_dir_zombi();
+		tss_zombisA[i].esp0 = mmu_proxima_pagina_fisica_libre();
 	
 	    gdt[TSS_A+i].base_0_15 = (((int)&tss_zombisA)<<16)>>16;
 	    gdt[TSS_A+i].base_23_16 = (((int)&tss_zombisA)<<8)>>24;
@@ -71,13 +73,14 @@ void tss_zombies(unsigned int indice){
 		tss_zombisB[i].ebp    = 0x8001000;
 		tss_zombisB[i].cs     =  9<<3;
 		tss_zombisB[i].ss     = 11<<3;
+		tss_zombisB[i].ss0    = 10<<3;
 		tss_zombisB[i].ds     = 11<<3;
 		tss_zombisB[i].es     = 11<<3;
 		tss_zombisB[i].gs     = 11<<3;
 		tss_zombisB[i].fs     = 12<<3;
 		tss_zombisB[i].cr3    = mmu_inicializar_dir_zombi();
 		tss_zombisB[i].eflags = 0x00000202;
-		tss_zombisB[i].esp0 = mmu_inicializar_dir_zombi();
+		tss_zombisB[i].esp0 = mmu_proxima_pagina_fisica_libre();
 	
 	    gdt[TSS_B+i].base_0_15 = (((int)&tss_zombisB)<<16)>>16;
 	    gdt[TSS_B+i].base_23_16 = (((int)&tss_zombisB)<<8)>>24;

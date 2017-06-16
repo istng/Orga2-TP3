@@ -55,9 +55,11 @@ typedef struct str_pte_entry {
 
 
 void mmu_inicializar();
+unsigned int mmu_proxima_pagina_fisica_libre();
 void mmu_mappear_pagina(unsigned int virtual, unsigned int dir_pd, unsigned int fisica, unsigned int user_lvl);
 void mmu_unmapear_pagina(unsigned int virtual, unsigned int cr3);
 void mmu_inicializar_dir_kernel();
+void identity_mapping(unsigned int directorio);
 
 unsigned int pos_a_dirMapa(unsigned int i, unsigned int j);
 void mappear_entorno_zombi(unsigned int i, unsigned int j, int jugador, unsigned int dir_pd );

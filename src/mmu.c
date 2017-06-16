@@ -24,21 +24,18 @@ void mmu_mappear_pagina(unsigned int virtual, unsigned int dir_pd, unsigned int 
 
 	unsigned int offset_directorio = virtual>>22;
 	unsigned int offset_tabla = (virtual<<10)>>22;
-	//unsigned int i;
+	unsigned int i;
 
 	pde_entry* pd = (pde_entry*)dir_pd;
 	pte_entry* pt;
 
 
-	breakpoint();
 	// (1) Nesesitamos la tabla de paginas:
 	if(pd[offset_directorio].present){
 		// Si estaba simplemente obtenemos direccion de la tabla de paginas en el directorio
 		pt = (pte_entry*) (pd[offset_directorio].direccion << 12);
-		breakpoint();
 	}
 	else{
-		breakpoint();
 		// Si no estaba agregamos una nueva entrada al directorio
 		unsigned int pagina_libre = mmu_proxima_pagina_fisica_libre(); // Pedimos una pagina para alocar la tabla
 		pd[offset_directorio].present = 1;
@@ -56,9 +53,9 @@ void mmu_mappear_pagina(unsigned int virtual, unsigned int dir_pd, unsigned int 
 		pt = (pte_entry*) pagina_libre;
 		// Inicializamos la tabla
 		//breakpoint();
-		/*for (i = 0; i < 1024; ++i){
+		for (i = 0; i < 1024; ++i){
 			pt[i].present = 0;
-		}*/
+		}
 	}
 
 	print_hex((unsigned int)pt,8,10,10,20);
@@ -245,7 +242,6 @@ void mappear_entorno_zombi(unsigned int i, unsigned int j, int jugador, unsigned
 	for (k = 0; k < 9;++k){
 		unsigned int pag_virtual = DIR_TAREAS + k * PAGE_SIZE;
 		unsigned int pag_fisica = pos_a_dirMapa(indices[k][0],indices[k][1]);
-		print_int(k,1,1,20);
 		mmu_mappear_pagina(pag_virtual,dir_pd,pag_fisica,1);
 
 	}

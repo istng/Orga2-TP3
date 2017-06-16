@@ -29,6 +29,7 @@ extern habilitar_pic
 ; TSS
 extern tss_inicializar
 
+extern tss_zombies
 
 
 ;; Saltear seccion de datos
@@ -123,7 +124,6 @@ modo_protegido:
     or eax,0x80000000
     mov cr0,eax
 
-
     ; Inicializar tss
     call tss_inicializar
     mov ax,13<<3;
@@ -144,7 +144,10 @@ modo_protegido:
     ; Cargar tarea inicial
     jmp 14<<3:0
 
+    ; Inicializamos Zombies
+    call tss_zombies
 
+    
     ; Habilitar interrupciones
 
     ; Saltar a la primera tarea: Idle
