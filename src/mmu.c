@@ -270,7 +270,7 @@ unsigned int mod_mapa(unsigned int i){
 
 // Esta funcion crea el directorio y las tablas asociadas a este. Luego devuelve la direccion del directorio.
 
-void mmu_inicializar_dir_zombi(jugador jug, unsigned int tipo){
+void mmu_inicializar_dir_zombi(jugador jug,char tipo){
 	// Inicializamos un directorio para la tarea
  	pde_entry* pd = (pde_entry*) mmu_proxima_pagina_fisica_libre();
 	identity_mapping((unsigned int)pd);

@@ -149,13 +149,7 @@ modo_protegido:
     ; Inicializar pantalla, luego de haber cargado todas las estructuras,
     ; variables del juego pero antes de habilitar el controlador de interrupciones y cargar la tarea idle
     call print_screen
-
-    push 0x27000
-    push 0
-    push 20
-    push 45
-    call mappear_entorno_zombi
-
+    
 
     ; Configurar controlador de interrupciones
     call resetear_pic ; remapeamos pic (teclado a 33 y reloj a 32) a IDT
