@@ -31,6 +31,8 @@ extern tss_inicializar
 
 extern tss_zombies
 
+extern mappear_entorno_zombi
+
 ;Variables del juego
 extern inicializar_variables_juego
 
@@ -134,7 +136,7 @@ modo_protegido:
     call tss_zombies
 
     ; Inicializar el scheduler
-    
+
     ; Inicializar la IDT
     call idt_inicializar
 
@@ -144,9 +146,16 @@ modo_protegido:
     xchg bx, bx
 
     call inicializar_variables_juego
-    ; Inicializar pantalla, luego de haber cargado todas las estructuras, 
+    ; Inicializar pantalla, luego de haber cargado todas las estructuras,
     ; variables del juego pero antes de habilitar el controlador de interrupciones y cargar la tarea idle
     call print_screen
+
+    push 0x27000
+    push 0
+    push 20
+    push 45
+    call mappear_entorno_zombi
+
 
     ; Configurar controlador de interrupciones
     call resetear_pic ; remapeamos pic (teclado a 33 y reloj a 32) a IDT
@@ -155,7 +164,7 @@ modo_protegido:
 
     ; Cargar tarea inicial
     jmp 14<<3:0
-    
+
     ; Habilitar interrupciones
 
     ; Saltar a la primera tarea: Idle

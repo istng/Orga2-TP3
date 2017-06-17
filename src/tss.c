@@ -59,10 +59,10 @@ void tss_zombies(){
 		tss_zombisA[i].es     = 11<<3;
 		tss_zombisA[i].gs     = 11<<3;
 		tss_zombisA[i].fs     = 12<<3;
-		tss_zombisA[i].cr3    = mmu_inicializar_dir_zombi();
+		tss_zombisA[i].cr3    = 0x09000000; // lo inicializamos con fruta
 		tss_zombisA[i].eflags = 0x00000202;
 		tss_zombisA[i].esp0 = mmu_proxima_pagina_fisica_libre();
-	
+
 	    gdt[TSS_A+i].base_0_15 = (((int)&tss_zombisA)<<16)>>16;
 	    gdt[TSS_A+i].base_23_16 = (((int)&tss_zombisA)<<8)>>24;
     	gdt[TSS_A+i].base_31_24 = ((int)&tss_zombisA)>>24;
@@ -78,10 +78,10 @@ void tss_zombies(){
 		tss_zombisB[i].es     = 11<<3;
 		tss_zombisB[i].gs     = 11<<3;
 		tss_zombisB[i].fs     = 12<<3;
-		tss_zombisB[i].cr3    = mmu_inicializar_dir_zombi();
+		tss_zombisB[i].cr3    = 0x09000000; // lo inicializamos con fruta
 		tss_zombisB[i].eflags = 0x00000202;
 		tss_zombisB[i].esp0 = mmu_proxima_pagina_fisica_libre();
-	
+
 	    gdt[TSS_B+i].base_0_15 = (((int)&tss_zombisB)<<16)>>16;
 	    gdt[TSS_B+i].base_23_16 = (((int)&tss_zombisB)<<8)>>24;
     	gdt[TSS_B+i].base_31_24 = ((int)&tss_zombisB)>>24;

@@ -58,7 +58,7 @@ void mmu_mappear_pagina(unsigned int virtual, unsigned int dir_pd, unsigned int 
 		}
 	}
 
-	print_hex((unsigned int)pt,8,10,10,20);
+
 	// (2) Buscamos la entrada de esa pagina en la tabla
 	if (pt[offset_tabla].present){
 		// Si la entrada ya existia solo remapeamos la direccion pasada por parametro
@@ -168,42 +168,42 @@ unsigned int pos_a_dirMapa(unsigned int i, unsigned int j){
 
 }
 
-void mappear_entorno_zombi(unsigned int i, unsigned int j, int jugador, unsigned int dir_pd ){
+void mappear_entorno_zombi(unsigned int i, unsigned int j, jugador jug, unsigned int dir_pd ){
 
 	// Precondicion: el zombi no se mueve hacia la columna donde esta el jugador contrario.
 
 	unsigned int indices[9][2];
-	indices[0][0]=i;
+	indices[0][0]=mod_mapa(i);
 	indices[0][1]=j;
 
-	if (jugador){
+	if (jug == JUGADOR_A){
 		// El movimiento lo realiza el jugador A
 
 
 
 		//Pagina 2:
-		indices[1][0] = i;
+		indices[1][0] = mod_mapa(i);
 		indices[1][1] = j+1;
 		//Pagina 3:
-		indices[2][0] = i+1 == 1 ? SIZE_H-1 : i+1;
+		indices[2][0] = mod_mapa(i+1);
 		indices[2][1] = j+1;
 		//Pagina 4:
-		indices[3][0] = i-1 == SIZE_H ? 1 : i-1;
+		indices[3][0] = mod_mapa(i-1);
 		indices[3][1] = j+1;
 		//Pagina 5:
-		indices[4][0] = i+1 == 1 ? SIZE_H-1 : i+1;
+		indices[4][0] = mod_mapa(i+1);
 		indices[4][1] = j;
 		//Pagina 6:
-		indices[5][0] = i-1 == SIZE_H ? 1 : i-1;
+		indices[5][0] = mod_mapa(i-1);
 		indices[5][1] = j;
 		//Pagina 7:
-		indices[6][0] = i;
+		indices[6][0] = mod_mapa(i);
 		indices[6][1] = j - 1;
 		//Pagina 8:
-		indices[7][0] = i-1 == SIZE_H ? 1 : i-1;
+		indices[7][0] = mod_mapa(i-1);
 		indices[7][1] = j-1;
 		//Pagina 9:
-		indices[8][0] = i+1 == SIZE_H ? 1 : i+1;
+		indices[8][0] = mod_mapa(i+1);
 		indices[8][1] = j-1;
 
 	}
@@ -211,28 +211,28 @@ void mappear_entorno_zombi(unsigned int i, unsigned int j, int jugador, unsigned
 		// El movimiento lo realiza el jugador B
 
 		//Pagina 2:
-		indices[1][0] = i;
+		indices[1][0] = mod_mapa(i);
 		indices[1][1] = j-1;
 		//Pagina 3:
-		indices[2][0] = i-1 == SIZE_H ? 1 : i-1;
+		indices[2][0] =mod_mapa(i-1);
 		indices[2][1] = j-1;
 		//Pagina 4:
-		indices[3][0] = i+1 == SIZE_H ? 1 : i+1;
+		indices[3][0] = mod_mapa(i+1);
 		indices[3][1] = j-1;
 		//Pagina 5:
-		indices[4][0] = i-1 == SIZE_H ? 1 : i-1;
+		indices[4][0] = mod_mapa(i-1);
 		indices[4][1] = j;
 		//Pagina 6:
-		indices[5][0] = i+1 == 1 ? SIZE_H-1 : i+1;
+		indices[5][0] = mod_mapa(i+1);
 		indices[5][1] = j;
 		//Pagina 7:
-		indices[6][0] = i;
+		indices[6][0] = mod_mapa(i);
 		indices[6][1] = j + 1;
 		//Pagina 8:
-		indices[7][0] = i+1 == 1 ? SIZE_H-1 : i+1;
+		indices[7][0] = mod_mapa(i+1);
 		indices[7][1] = j+1;
 		//Pagina 9:
-		indices[8][0] = i-1 == SIZE_H ? 1 : i-1;
+		indices[8][0] = mod_mapa(i-1);
 		indices[8][1] = j+1;
 
 	}
@@ -242,6 +242,7 @@ void mappear_entorno_zombi(unsigned int i, unsigned int j, int jugador, unsigned
 	for (k = 0; k < 9;++k){
 		unsigned int pag_virtual = DIR_TAREAS + k * PAGE_SIZE;
 		unsigned int pag_fisica = pos_a_dirMapa(indices[k][0],indices[k][1]);
+		print_int(k+1,indices[k][1],indices[k][0],30);
 		mmu_mappear_pagina(pag_virtual,dir_pd,pag_fisica,1);
 
 	}
@@ -249,14 +250,60 @@ void mappear_entorno_zombi(unsigned int i, unsigned int j, int jugador, unsigned
 }
 
 
+
+unsigned int mod_mapa(unsigned int i){
+
+	unsigned int res_i;
+	if ( i > SIZE_H ){
+		res_i = i % SIZE_H;
+	}
+	else if (i == 0){
+		res_i = SIZE_H;
+	}
+	else {
+		res_i = i;
+	}
+	return res_i;
+}
+
+
+
 // Esta funcion crea el directorio y las tablas asociadas a este. Luego devuelve la direccion del directorio.
 
-unsigned int mmu_inicializar_dir_zombi(){
+void mmu_inicializar_dir_zombi(jugador jug, unsigned int tipo){
 	// Inicializamos un directorio para la tarea
  	pde_entry* pd = (pde_entry*) mmu_proxima_pagina_fisica_libre();
-
 	identity_mapping((unsigned int)pd);
 
-	return (unsigned int) pd;
+	info_jugador juga =	jug == JUGADOR_A ? A : B;
+	unsigned int i = juga.pos;
+	unsigned int j = 1;
+
+	 char *posMem = (char *) pos_a_dirMapa(i,j);
+	 char *posCodigo;
+
+	//Movemos el codigo del zombie
+	switch (tipo) {
+		case 'G':
+			posCodigo = (char*) (jug == 0 ? 0x10000 : 0x13000);
+			break;
+		case 'C':
+			posCodigo = (char*) (jug == 0 ? 0x11000 : 0x14000);
+			break;
+		case 'M':
+			posCodigo = (char*) (jug == 0 ? 0x12000 : 0x15000);
+			break;
+	}
+
+	// Copiamos el codigo
+	unsigned int k;
+	for(k = 0; k<1024 ; k++){
+		posMem[k] = posCodigo[k];
+	}
+
+	// mappearmos el entorno del zombie
+
+	mappear_entorno_zombi(i,j,jug,(unsigned int) pd);
+
 
 }

@@ -36,4 +36,3 @@ unsigned short sched_proximo_indice() {
 	return res;
 
 }
-
