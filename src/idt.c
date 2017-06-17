@@ -137,6 +137,9 @@ void accion_tecla(char scan_code){
             game_jugador_cambiar_zombie(JUGADOR_A, SIGUIENTE);
             print_jugador(JUGADOR_A);
             break;
+        case '<':
+            game_lanzar_zombi(JUGADOR_A);
+            break;
         case 'I':
             print_limpiar_pos_jugador(JUGADOR_B);
             game_jugador_mover(JUGADOR_B, ARRIBA);
@@ -154,6 +157,9 @@ void accion_tecla(char scan_code){
         case 'L':
             game_jugador_cambiar_zombie(JUGADOR_B, SIGUIENTE);
             print_jugador(JUGADOR_B);
+            break;
+        case '>':
+            game_lanzar_zombi(JUGADOR_B);
             break;
     }
 }

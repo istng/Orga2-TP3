@@ -6,24 +6,27 @@
 
 #include "game.h"
 
-info_jugador A; 
+info_jugador A;
 info_jugador B;
-info_zombie zombiesA[8];
-info_zombie zombiesB[8];
+info_zombie zombiesA[CANT_ZOMBIS];
+info_zombie zombiesB[CANT_ZOMBIS];
 
-tipo_zombie zombie_guerrero = { (char) 'G', 
-								(struct str_tipo_zombie*) &zombie_mago, 
-								(struct str_tipo_zombie*) &zombie_clerigo};
-tipo_zombie zombie_mago 	= { (char) 'M', 
-								(struct str_tipo_zombie*) &zombie_clerigo, 
-								(struct str_tipo_zombie*) &zombie_guerrero};
-tipo_zombie zombie_clerigo 	= { (char) 'C', 
-								(struct str_tipo_zombie*) &zombie_guerrero, 
-								(struct str_tipo_zombie*) &zombie_mago};
+nodo_zombie zombie_guerrero = { (zombie_tipo) GUERRERO,
+								(char) 'G', 
+								(struct str_nodo_zombie*) &zombie_mago, 
+								(struct str_nodo_zombie*) &zombie_clerigo};
+nodo_zombie zombie_mago 	= { (zombie_tipo) MAGO,
+								(char) 'M', 
+								(struct str_nodo_zombie*) &zombie_clerigo, 
+								(struct str_nodo_zombie*) &zombie_guerrero};
+nodo_zombie zombie_clerigo 	= { (zombie_tipo) CLERIGO,
+								(char) 'C', 
+								(struct str_nodo_zombie*) &zombie_guerrero, 
+								(struct str_nodo_zombie*) &zombie_mago};
 
 
 void inicializar_variables_juego(){
-	A.jugador = 0;
+	A.jug = JUGADOR_A;
 	A.pos = 20;
 	A.puntos = 0;
 	A.zombies_usados = 0;
@@ -31,7 +34,7 @@ void inicializar_variables_juego(){
 	A.ultimo_zombie = 0;
 	
 	
-	B.jugador = 1;
+	B.jug = JUGADOR_B;
 	B.pos = 20;
 	B.puntos = 0;
 	B.zombies_usados = 0;
@@ -40,8 +43,8 @@ void inicializar_variables_juego(){
 
 
 	for (int i = 0; i < 8; ++i){
-		zombiesA[i].tipo_zombie = 0; //es decir, no hay zombie
-		zombiesB[i].tipo_zombie = 0;
+		zombiesA[i].estado = INACTIVO; //es decir, no hay zombie
+		zombiesB[i].estado = INACTIVO;
 	}
 
 }
@@ -78,27 +81,36 @@ void game_jugador_cambiar_zombie(jugador jug, jugador_zombie_lista dir){
 		case JUGADOR_A:
 			switch(dir){
 				case ANTERIOR:
-					A.zombie_seleccionado = (A.zombie_seleccionado)->anterior_tipo_zombie;
+					A.zombie_seleccionado = (A.zombie_seleccionado)->anterior_nodo_zombie;
 					break;
 				case SIGUIENTE:
-					A.zombie_seleccionado = A.zombie_seleccionado->siguiente_tipo_zombie;
+					A.zombie_seleccionado = A.zombie_seleccionado->siguiente_nodo_zombie;
 					break;
 			}
 			break;
 		case JUGADOR_B:
 			switch(dir){
 				case ANTERIOR:
-					B.zombie_seleccionado = B.zombie_seleccionado->anterior_tipo_zombie;
+					B.zombie_seleccionado = B.zombie_seleccionado->anterior_nodo_zombie;
 					break;
 				case SIGUIENTE:
-					B.zombie_seleccionado = B.zombie_seleccionado->siguiente_tipo_zombie;
+					B.zombie_seleccionado = B.zombie_seleccionado->siguiente_nodo_zombie;
 					break;
 			}
 			break;
 	}
 }
 
-void game_lanzar_zombi(unsigned int jugador) {
+// La finción game_lanzar_zombi se va encargar de:
+// *Colocar (copiar) el zombie (el código del progrma) en el mapa
+// *Mapear a la dirección del eip (y siguientes) de la TSS las posiciones en el mapa donde se
+//  encuentra el zombie (y su entorno)
+// *Marcar el zombie como ACTIVO para que el scheduler le de tiempo de ejecución
+void game_lanzar_zombi(jugador jug) {
+	
 }
+
+/*
 void game_move_current_zombi(direccion dir) {
 }
+*/

@@ -60,6 +60,8 @@
 typedef enum jugador_e { JUGADOR_A, JUGADOR_B } jugador;
 typedef enum jugador_direccion_e { ARRIBA, ABAJO } jugador_direccion;
 typedef enum jugador_zombie_lista_e { ANTERIOR, SIGUIENTE } jugador_zombie_lista;
+typedef enum zombie_tipo_e { GUERRERO, MAGO, CLERIGO } zombie_tipo;
+typedef enum zombie_estado_e { ACTIVO, INACTIVO } zombie_estado;
 
 
 #endif  /* !__DEFINES_H__ */
