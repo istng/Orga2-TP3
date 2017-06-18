@@ -59,11 +59,11 @@ unsigned int mmu_proxima_pagina_fisica_libre();
 void mmu_mappear_pagina(unsigned int virtual, unsigned int dir_pd, unsigned int fisica, unsigned int user_lvl);
 void mmu_unmapear_pagina(unsigned int virtual, unsigned int cr3);
 void mmu_inicializar_dir_kernel();
-void identity_mapping(unsigned int directorio);
+void identity_mapping(unsigned int directorio,unsigned int user_lvl);
 
 unsigned int pos_a_dirMapa(unsigned int i, unsigned int j);
 void mappear_entorno_zombi(unsigned int i, unsigned int j, jugador jug, unsigned int dir_pd );
-void mmu_inicializar_dir_zombi(jugador jug, unsigned int tipo);
+unsigned int mmu_inicializar_dir_zombi(jugador jug,char tipo);
 unsigned int mod_mapa(unsigned int i);
 
 

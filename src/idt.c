@@ -64,14 +64,14 @@ void idt_inicializar() {
     IDT_ENTRY(17);
     IDT_ENTRY(18);
     IDT_ENTRY(19);
-    
+
     // Entrada interrupcion reloj
     IDT_ENTRY(32);
     // Entrada interrupcion teclado
     IDT_ENTRY(33);
 
     // Entrada interrupcion de software
-    //IDT_ENTRY(0x66); chequear
+    IDT_ENTRY(0x66);
 
 
 }
@@ -104,7 +104,7 @@ char convert_tecla(char scan_code) {
             break;
         case 0x25:
             ascii = 'K';
-            break;        
+            break;
         case 0x26:
             ascii = 'L';
             break;
@@ -139,6 +139,7 @@ void accion_tecla(char scan_code){
             break;
         case '<':
             game_lanzar_zombi(JUGADOR_A);
+            print("termino",20,20,0x22);
             break;
         case 'I':
             print_limpiar_pos_jugador(JUGADOR_B);

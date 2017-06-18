@@ -57,7 +57,7 @@ void print_int(unsigned int n, unsigned int x, unsigned int y, unsigned short at
 void print_screen(){
     ca (*p)[VIDEO_COLS] = (ca (*)[VIDEO_COLS]) VIDEO; // magia || arreglo de filas
     int i,j;
-    
+
     //pintamos todo de verde color esperanza
     for (i = 0; i < VIDEO_FILS;++i){
         for (j = 0; j < VIDEO_COLS;++j){
@@ -148,7 +148,7 @@ void print_screen(){
 	p[46][62].c = 50;
 	p[46][62].a = C_FG_WHITE;
 	p[46][60].c = 49;
-	p[46][60].a = C_FG_WHITE;	
+	p[46][60].a = C_FG_WHITE;
 
 
 	// Agregamos los jugadores
@@ -181,4 +181,17 @@ void print_limpiar_pos_jugador(jugador jug){
 	}
 }
 
+void print_zombi(jugador jug, unsigned int i, unsigned int j){
+  switch(jug){
+		case JUGADOR_A:
+			print(&(A.zombie_seleccionado->ascii), j, i, C_FG_LIGHT_BLUE);
+			break;
+		case JUGADOR_B:
+			print(&(B.zombie_seleccionado->ascii), j, i, C_FG_LIGHT_RED);
+			break;
+	}
+}
 
+void print_limpiar_pos_zombi(unsigned int i,unsigned int j){
+    print("X",j,i,0x27);
+}

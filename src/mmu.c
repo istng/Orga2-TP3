@@ -103,18 +103,18 @@ void mmu_inicializar_dir_kernel() {
 
 	pde_entry* pd = (pde_entry*)0x27000;
 
-	identity_mapping((unsigned int)pd);
+	identity_mapping((unsigned int)pd,0);
 
 }
 
-void identity_mapping(unsigned int directorio){
+void identity_mapping(unsigned int directorio,unsigned int user_lvl){
 
 	pde_entry* pd = (pde_entry*)directorio;
 	pte_entry* pt = (pte_entry*)mmu_proxima_pagina_fisica_libre();
 
 	pd[0].present = 1;
 	pd[0].read_write = 1;
-	pd[0].user_supervisor = 0; ///??????
+	pd[0].user_supervisor = user_lvl; ///??????
 	pd[0].plvl_writethr = 0;
 	pd[0].plvl_cachedisable = 0;
 	pd[0].accesed = 0;
@@ -134,7 +134,7 @@ void identity_mapping(unsigned int directorio){
 	{
 		pt[i].present = 1;
 		pt[i].read_write = 1;
-		pt[i].user_supervisor = 0; ///??????
+		pt[i].user_supervisor = user_lvl; ///??????
 		pt[i].plvl_writethr = 0;
 		pt[i].plvl_cachedisable = 0;
 		pt[i].accesed = 0;
@@ -242,7 +242,7 @@ void mappear_entorno_zombi(unsigned int i, unsigned int j, jugador jug, unsigned
 	for (k = 0; k < 9;++k){
 		unsigned int pag_virtual = DIR_TAREAS + k * PAGE_SIZE;
 		unsigned int pag_fisica = pos_a_dirMapa(indices[k][0],indices[k][1]);
-		print_int(k+1,indices[k][1],indices[k][0],30);
+		//print_int(k+1,indices[k][1],indices[k][0],30);
 		mmu_mappear_pagina(pag_virtual,dir_pd,pag_fisica,1);
 
 	}
@@ -270,17 +270,21 @@ unsigned int mod_mapa(unsigned int i){
 
 // Esta funcion crea el directorio y las tablas asociadas a este. Luego devuelve la direccion del directorio.
 
-void mmu_inicializar_dir_zombi(jugador jug,char tipo){
+unsigned int mmu_inicializar_dir_zombi(jugador jug,char tipo){
 	// Inicializamos un directorio para la tarea
  	pde_entry* pd = (pde_entry*) mmu_proxima_pagina_fisica_libre();
-	identity_mapping((unsigned int)pd);
+	identity_mapping((unsigned int)pd,1);
+
+
 
 	info_jugador juga =	jug == JUGADOR_A ? A : B;
 	unsigned int i = juga.pos;
 	unsigned int j = 1;
 
-	 char *posMem = (char *) pos_a_dirMapa(i,j);
+	 char *posMem = (char *) 0x8000000;
 	 char *posCodigo;
+
+
 
 	//Movemos el codigo del zombie
 	switch (tipo) {
@@ -295,15 +299,24 @@ void mmu_inicializar_dir_zombi(jugador jug,char tipo){
 			break;
 	}
 
-	// Copiamos el codigo
-	unsigned int k;
-	for(k = 0; k<1024 ; k++){
-		posMem[k] = posCodigo[k];
-	}
+
 
 	// mappearmos el entorno del zombie
 
 	mappear_entorno_zombi(i,j,jug,(unsigned int) pd);
 
+	// La inicializamos en el scheduler
+
+
+	// Copiamos el codigo
+	unsigned int cr3 = rcr3();
+	lcr3((unsigned int)pd);
+	unsigned int k;
+	for(k = 0; k<1024 ; k++){
+		posMem[k] = posCodigo[k];
+	}
+	lcr3(cr3);
+
+	return (unsigned int) pd;
 
 }

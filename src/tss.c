@@ -68,7 +68,7 @@ void tss_zombies(){
     	gdt[TSS_A+i].base_31_24 = ((int)&tss_zombisA)>>24;
 
 
-    	tss_zombisB[i].eip    = 0x8000000;
+    tss_zombisB[i].eip    = 0x8000000;
 		tss_zombisB[i].esp    = 0x8001000;
 		tss_zombisB[i].ebp    = 0x8001000;
 		tss_zombisB[i].cs     =  9<<3;
@@ -86,7 +86,15 @@ void tss_zombies(){
 	    gdt[TSS_B+i].base_23_16 = (((int)&tss_zombisB)<<8)>>24;
     	gdt[TSS_B+i].base_31_24 = ((int)&tss_zombisB)>>24;
 	}
+}
 
+void tss_inicializar_zombi(jugador jug,unsigned int indice, unsigned int cr3){
 
+	switch (jug) {
+		case JUGADOR_A:
+			tss_zombisA[indice].cr3 = cr3;
+		case JUGADOR_B:
+			tss_zombisB[indice].cr3 = cr3;
+	}
 
 }

@@ -125,26 +125,26 @@ ISR 19
 ;; Rutina de atención del RELOJ
 ;; -------------------------------------------------------------------------- ;;
 global _isr32:
-_isr32: 
-    pushad   
+_isr32:
+    pushad
 
     call proximo_reloj
-    call sched_proximo_indice   
+    call sched_proximo_indice
 
     cmp ax, 0
-    je  .nojump      
-    
-    mov [sched_tarea_selector], ax      
-    call fin_intr_pic1      
-    jmp far [sched_tarea_offset]      
-    
-    jmp .end   
-    
-    .nojump:   
-        call fin_intr_pic1   
-    
-    .end:   
-    popad     
+    je  .nojump
+
+    mov [sched_tarea_selector], ax
+    call fin_intr_pic1
+    jmp far [sched_tarea_offset]
+
+    jmp .end
+
+    .nojump:
+        call fin_intr_pic1
+
+    .end:
+    popad
     iret
 
 
@@ -162,6 +162,16 @@ _isr33:
     imprimir_tecla al, 0, 79
     call accion_tecla
     call fin_intr_pic1
+
+    popad
+    iret
+
+;;
+;; Rutina de atención del Software
+;; -------------------------------------------------------------------------- ;;
+global _isr0x66
+_isr0x66:
+    pushad
 
     popad
     iret

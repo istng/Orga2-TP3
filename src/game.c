@@ -107,20 +107,23 @@ void game_jugador_cambiar_zombie(jugador jug, jugador_zombie_lista dir){
 // *Mapear a la dirección del eip (y siguientes) de la TSS las posiciones en el mapa donde se
 //  encuentra el zombie (y su entorno)
 // *Marcar el zombie como ACTIVO para que el scheduler le de tiempo de ejecución
+
+// Sera llamada del scheduler y devolvera una
+
+
 void game_lanzar_zombi(jugador jug) {
 
 
-
 	info_jugador info_jug =	jug == JUGADOR_A ? A : B;
-
-	unsigned short nuevoZombie = info_jug.zombies_usados == 0 ? 0 : info_jug.zombies_usados + 1;
-
-	info_zombie* zombie =  jug == 0 ? &zombiesA[nuevoZombie] : &zombiesA[nuevoZombie];
+	unsigned short indiceZombie = info_jug.zombies_usados == 0 ? 0 : info_jug.zombies_usados + 1;
+	info_zombie* zombie =  jug == JUGADOR_A ? &zombiesA[indiceZombie] : &zombiesA[indiceZombie];
 	char tipoZombie = info_jug.zombie_seleccionado->ascii;
-	//tss* tssZombie =  jug == JUGADOR_A ? &tss_zombisA[nuevoZombie] : &tss_zombisB[nuevoZombie];
-	//unsigned int dir_pd = tssZombie->cr3;
+
 	// inicializamos el directorio de zombie y copiamos su codigo
-	mmu_inicializar_dir_zombi(jug,tipoZombie);
+	unsigned int dir_pd  = mmu_inicializar_dir_zombi(jug,tipoZombie);
+
+
+	tss_inicializar_zombi(jug, indiceZombie, dir_pd);
 
 	// inicializamos el zombie y lo marcamos como activo
 	switch (tipoZombie) {
@@ -138,11 +141,19 @@ void game_lanzar_zombi(jugador jug) {
 	zombie->jug = info_jug.jug;
 	zombie->estado = ACTIVO;
 	zombie->i = info_jug.pos;
-	zombie->j = info_jug.pos + 1;
+	zombie->j = jug == JUGADOR_A ? 1 : SIZE_W;
+
 
 	// Modificamos la info del jugador
 	info_jug.zombies_usados = info_jug.zombies_usados + 1;
-	info_jug.ultimo_zombie = nuevoZombie;
+	info_jug.ultimo_zombie = indiceZombie;
+
+	// Por ultimo lo pitamos
+
+	print_zombi(jug,zombie->i,zombie->j);
+
+
+
 
 }
 
