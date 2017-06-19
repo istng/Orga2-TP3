@@ -12,6 +12,6 @@
 #include "tss.h"
 
 unsigned short sched_proximo_indice();
-
+jugador jugadorActual();
 
 #endif	/* !__SCHED_H__ */

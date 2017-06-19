@@ -6,6 +6,7 @@
 
 #include "game.h"
 #include "tss.h"
+#include "sched.h"
 
 info_jugador A;
 info_jugador B;
@@ -154,7 +155,21 @@ void game_lanzar_zombi(jugador jug) {
 	
 }
 
-/*
+
 void game_move_current_zombi(direccion dir) {
+
+	/*jugador jug = jugadorActual();
+
+
+
+	desmapear_entorno_zombie(unsigned int i, unsigned int j, jugador jug, unsigned int dir_pd )
+	switch(dir){
+		case 0x83D:
+
+	}
+
+
+	
+	*/
 }
-*/
+

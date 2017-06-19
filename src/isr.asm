@@ -22,6 +22,9 @@ extern sched_proximo_indice
 extern convert_tecla
 extern accion_tecla
 
+;; Game
+extern game_move_current_zombi
+
 
 
 ;;
@@ -134,7 +137,6 @@ _isr32:
     cmp ax, 0
     je  .nojump
 
-    mov ax,15
     xchg bx, bx
     shl ax, 3
     mov [sched_tarea_selector], ax
@@ -177,6 +179,9 @@ _isr33:
 global _isr0x66
 _isr0x66:
     pushad
+
+    push eax
+    call game_move_current_zombi
 
     popad
     iret

@@ -23,7 +23,7 @@ unsigned short sched_proximo_indice() {
 			//	A.ultimo_zombie = (A.ultimo_zombie + 1) % A.zombies_usados;
 			//}
 			if(A.zombies_usados > 0){
-				res = TSS_A + A.ultimo_zombie - 1;
+				res = TSS_A + (A.ultimo_zombie % A.zombies_usados ) ;
 				//breakpoint();
 			}
 			siguiente_jugador = JUGADOR_B;
@@ -34,8 +34,8 @@ unsigned short sched_proximo_indice() {
 			//	B.ultimo_zombie = (B.ultimo_zombie + 1) % B.zombies_usados;
 			//}
 			if(B.zombies_usados > 0){
-				res = TSS_B + B.ultimo_zombie - 1;
-				breakpoint();
+				res = TSS_B + (B.ultimo_zombie % B.zombies_usados );
+				
 			}
 			siguiente_jugador = JUGADOR_A;
 			break;
@@ -46,3 +46,14 @@ unsigned short sched_proximo_indice() {
 	return res;
 
 }
+
+jugador jugadorActual(){
+	if (siguiente_jugador == JUGADOR_A)
+	{
+		return JUGADOR_B;
+	}
+	else{
+		return JUGADOR_A;
+	}
+}
+

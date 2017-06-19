@@ -63,6 +63,7 @@ void identity_mapping(unsigned int directorio,unsigned int user_lvl);
 
 unsigned int pos_a_dirMapa(unsigned int i, unsigned int j);
 void mappear_entorno_zombi(unsigned int i, unsigned int j, jugador jug, unsigned int dir_pd );
+void desmapear_entorno_zombie(unsigned int i, unsigned int j, jugador jug, unsigned int dir_pd );
 unsigned int mmu_inicializar_dir_zombi(jugador jug,char tipo);
 unsigned int mod_mapa(unsigned int i);
 
