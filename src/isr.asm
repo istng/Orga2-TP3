@@ -134,6 +134,7 @@ _isr32:
     cmp ax, 0
     je  .nojump
 
+    xchg bx,bx
     mov [sched_tarea_selector], ax
     call fin_intr_pic1
     jmp far [sched_tarea_offset]
