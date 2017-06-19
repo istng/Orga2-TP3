@@ -23,6 +23,8 @@
 #define SIZE_W                  78
 #define SIZE_H                  44
 
+#define llegadaA 				78
+#define llegadaB				0
 
 /* Indices en la gdt */
 /* -------------------------------------------------------------------------- */

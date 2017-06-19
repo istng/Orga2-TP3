@@ -71,7 +71,7 @@ void idt_inicializar() {
     IDT_ENTRY(33);
 
     // Entrada interrupcion de software
-    IDT_ENTRY(0x66);
+    IDT_ENTRY(102);
 
 
 }

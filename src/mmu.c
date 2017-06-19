@@ -293,7 +293,7 @@ unsigned int mmu_inicializar_dir_zombi(jugador jug,char tipo){
 	unsigned int j = 1;
 
 	// Posición en el mapa en el cual se va a copiar el código del zombie
-	char *posMem = (char *) pos_a_dirMapa(i, j);//0x8000000;
+	char *posMem = (char *) pos_a_dirMapa(mod_mapa(i), j);//0x8000000;
 	char *posCodigo;
 
 
@@ -338,83 +338,16 @@ unsigned int mmu_inicializar_dir_zombi(jugador jug,char tipo){
 }
 
 
-void desmapear_entorno_zombie(unsigned int i, unsigned int j, jugador jug, unsigned int dir_pd ){
+void desmapear_entorno_zombie(unsigned int i, unsigned int j, unsigned int dir_pd ){
 
 	// Precondicion: el zombi no se mueve hacia la columna donde esta el jugador contrario.
 
-	unsigned int indices[9][2];
-	indices[0][0]=mod_mapa(i);
-	indices[0][1]=j;
-
-	if (jug == JUGADOR_A){
-		// El movimiento lo realiza el jugador A
-
-
-
-		//Pagina 2:
-		indices[1][0] = mod_mapa(i);
-		indices[1][1] = j+1;
-		//Pagina 3:
-		indices[2][0] = mod_mapa(i+1);
-		indices[2][1] = j+1;
-		//Pagina 4:
-		indices[3][0] = mod_mapa(i-1);
-		indices[3][1] = j+1;
-		//Pagina 5:
-		indices[4][0] = mod_mapa(i+1);
-		indices[4][1] = j;
-		//Pagina 6:
-		indices[5][0] = mod_mapa(i-1);
-		indices[5][1] = j;
-		//Pagina 7:
-		indices[6][0] = mod_mapa(i);
-		indices[6][1] = j - 1;
-		//Pagina 8:
-		indices[7][0] = mod_mapa(i-1);
-		indices[7][1] = j-1;
-		//Pagina 9:
-		indices[8][0] = mod_mapa(i+1);
-		indices[8][1] = j-1;
-
-	}
-	else{
-		// El movimiento lo realiza el jugador B
-
-		//Pagina 2:
-		indices[1][0] = mod_mapa(i);
-		indices[1][1] = j-1;
-		//Pagina 3:
-		indices[2][0] =mod_mapa(i-1);
-		indices[2][1] = j-1;
-		//Pagina 4:
-		indices[3][0] = mod_mapa(i+1);
-		indices[3][1] = j-1;
-		//Pagina 5:
-		indices[4][0] = mod_mapa(i-1);
-		indices[4][1] = j;
-		//Pagina 6:
-		indices[5][0] = mod_mapa(i+1);
-		indices[5][1] = j;
-		//Pagina 7:
-		indices[6][0] = mod_mapa(i);
-		indices[6][1] = j + 1;
-		//Pagina 8:
-		indices[7][0] = mod_mapa(i+1);
-		indices[7][1] = j+1;
-		//Pagina 9:
-		indices[8][0] = mod_mapa(i-1);
-		indices[8][1] = j+1;
-
-	}
-
-
+	
+	unsigned int dir_inicial = 0x8000000;
 	int k;
 	for (k = 0; k < 9;++k){
-		//unsigned int pag_virtual = DIR_TAREAS + k * PAGE_SIZE;
-		//unsigned int pag_fisica = pos_a_dirMapa(indices[k][0],indices[k][1]);
-		//print_int(k+1,indices[k][1],indices[k][0],30);
-		//mmu_unmapear_pagina(pag_virtual,dir_pd);//???????????????'
-
+		unsigned int pagina = dir_inicial + k * PAGE_SIZE;
+		mmu_unmapear_pagina(pagina,dir_pd);
 	}
 
 }
