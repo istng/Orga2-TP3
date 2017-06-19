@@ -42,8 +42,8 @@ void inicializar_variables_juego(){
 	B.zombie_seleccionado = &zombie_mago;
 	B.ultimo_zombie = 0;
 
-
-	for (int i = 0; i < 8; ++i){
+	int i;
+	for (i = 0; i < 8; ++i){
 		zombiesA[i].estado = INACTIVO; //es decir, no hay zombie
 		zombiesB[i].estado = INACTIVO;
 	}
