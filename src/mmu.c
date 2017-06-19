@@ -89,11 +89,22 @@ void mmu_unmapear_pagina(unsigned int virtual, unsigned int cr3){
 
 	unsigned int offset_directorio = virtual>>22;
 	unsigned int offset_tabla = (virtual<<10)>>22;
+	unsigned int i;
 
 	pde_entry* pd = (pde_entry*)cr3;
 	pte_entry* pt = (pte_entry*) (unsigned int)(pd[offset_directorio].direccion);
 
 	pt[offset_tabla].present = 0;
+
+	for(i = 0; i < 1024; i++){
+		if(pt[i].present != 0){
+			break;
+		}
+	}
+
+	if(i != 1024){
+		pd[offset_directorio].present = 0;
+	}
 }
 
 
@@ -243,7 +254,7 @@ void mappear_entorno_zombi(unsigned int i, unsigned int j, jugador jug, unsigned
 		unsigned int pag_virtual = DIR_TAREAS + k * PAGE_SIZE;
 		unsigned int pag_fisica = pos_a_dirMapa(indices[k][0],indices[k][1]);
 		//print_int(k+1,indices[k][1],indices[k][0],30);
-		mmu_mappear_pagina(pag_virtual,dir_pd,pag_fisica,1);
+		mmu_mappear_pagina(pag_virtual,dir_pd,pag_fisica, 0);//???????????????'
 
 	}
 
@@ -273,7 +284,7 @@ unsigned int mod_mapa(unsigned int i){
 unsigned int mmu_inicializar_dir_zombi(jugador jug,char tipo){
 	// Inicializamos un directorio para la tarea
  	pde_entry* pd = (pde_entry*) mmu_proxima_pagina_fisica_libre();
-	identity_mapping((unsigned int)pd,1);
+	identity_mapping((unsigned int)pd,0); //?????????????????????
 
 
 
@@ -281,8 +292,9 @@ unsigned int mmu_inicializar_dir_zombi(jugador jug,char tipo){
 	unsigned int i = juga.pos;
 	unsigned int j = 1;
 
-	 char *posMem = (char *) 0x8000000;
-	 char *posCodigo;
+	// Posición en el mapa en el cual se va a copiar el código del zombie
+	char *posMem = (char *) pos_a_dirMapa(i, j);//0x8000000;
+	char *posCodigo;
 
 
 
@@ -307,16 +319,20 @@ unsigned int mmu_inicializar_dir_zombi(jugador jug,char tipo){
 
 	// La inicializamos en el scheduler
 
+	// La página de memoria del mapa donde se va acopiar el código se mapea
+	// de no hacerlo se obtiene un Page Fault
+	mmu_mappear_pagina((unsigned int)posMem, rcr3(), (unsigned int)posMem, 0);
 
 	// Copiamos el codigo
-	unsigned int cr3 = rcr3();
-	lcr3((unsigned int)pd);
+	//unsigned int cr3 = rcr3();
+	//lcr3((unsigned int)pd);
 	unsigned int k;
-	for(k = 0; k<1024 ; k++){
+	for(k = 0; k<PAGE_SIZE ; k++){
 		posMem[k] = posCodigo[k];
 	}
-	lcr3(cr3);
+	//lcr3(cr3);
+	// desmapeamos la pagina
+	mmu_unmapear_pagina((unsigned int)posMem, rcr3());
 
 	return (unsigned int) pd;
-
 }

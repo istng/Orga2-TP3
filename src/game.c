@@ -114,10 +114,12 @@ void game_jugador_cambiar_zombie(jugador jug, jugador_zombie_lista dir){
 void game_lanzar_zombi(jugador jug) {
 
 
-	info_jugador info_jug =	jug == JUGADOR_A ? A : B;
-	unsigned short indiceZombie = info_jug.zombies_usados == 0 ? 0 : info_jug.zombies_usados + 1;
-	info_zombie* zombie =  jug == JUGADOR_A ? &zombiesA[indiceZombie] : &zombiesA[indiceZombie];
-	char tipoZombie = info_jug.zombie_seleccionado->ascii;
+	info_jugador *info_jug = jug == JUGADOR_A ? &A : &B;
+	unsigned short indiceZombie = info_jug->zombies_usados;
+	// Esta linae de abajo no la entendí
+	//unsigned short indiceZombie = info_jug->zombies_usados == 0 ? 0 : info_jug->zombies_usados + 1;
+	info_zombie* zombie =  jug == JUGADOR_A ? &zombiesA[indiceZombie] : &zombiesB[indiceZombie];
+	char tipoZombie = info_jug->zombie_seleccionado->ascii;
 
 	// inicializamos el directorio de zombie y copiamos su codigo
 	unsigned int dir_pd  = mmu_inicializar_dir_zombi(jug,tipoZombie);
@@ -138,23 +140,17 @@ void game_lanzar_zombi(jugador jug) {
 			break;
 	}
 
-	zombie->jug = info_jug.jug;
+	zombie->jug = info_jug->jug;
 	zombie->estado = ACTIVO;
-	zombie->i = info_jug.pos;
+	zombie->i = info_jug->pos;
 	zombie->j = jug == JUGADOR_A ? 1 : SIZE_W;
 
-
-	// Modificamos la info del jugador
-	info_jug.zombies_usados = info_jug.zombies_usados + 1;
-	info_jug.ultimo_zombie = indiceZombie;
-
-	// Por ultimo lo pitamos
-
+	// Lo pintamos en el mapa
 	print_zombi(jug,zombie->i,zombie->j);
 
-
-
-
+	// Por último modificamos la info del jugador
+	info_jug->zombies_usados = (info_jug->zombies_usados) + 1;
+	info_jug->ultimo_zombie = indiceZombie;
 }
 
 /*
