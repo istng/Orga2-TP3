@@ -27,6 +27,7 @@ void tss_inicializar() {
 	tss_idle.es     = GDT_DATA_0<<3;
 	tss_idle.gs     = GDT_DATA_0<<3;
 	tss_idle.fs     = GDT_VIDEO<<3;
+	tss_idle.ss0    = GDT_DATA_0<<3;
 	tss_idle.cr3    = 0x27000;
 	tss_idle.eflags = 0x00000202;
 
@@ -52,12 +53,12 @@ void tss_zombies(){
         (unsigned char)     0x00,           /* base[23:16]  */ 
         (unsigned char)     0x09,           /* type         */
         (unsigned char)     0x00,           /* s            */
-        (unsigned char)     0x00,           /* dpl privilegios*/
+        (unsigned char)     0x03,           /* dpl privilegios*/
         (unsigned char)     0x01,           /* p            */
         (unsigned char)     0x00,           /* limit[16:19] */
-        (unsigned char)     0x01,           /* avl          */
+        (unsigned char)     0x00,           /* avl          */
         (unsigned char)     0x00,           /* l            */
-        (unsigned char)     0x00,           /* db           */
+        (unsigned char)     0x01,           /* db           */
         (unsigned char)     0x00,           /* g            */
         (unsigned char)     0x00,           /* base[31:24]  */
     };
@@ -67,16 +68,16 @@ void tss_zombies(){
 		tss_zombisA[i].eip    = 0x8000000;
 		tss_zombisA[i].esp    = 0x8001000;
 		tss_zombisA[i].ebp    = 0x8001000;
-		tss_zombisA[i].cs     = GDT_CODIGO_3<<3;
-		tss_zombisA[i].ss     = GDT_DATA_3<<3;
+		tss_zombisA[i].cs     = (GDT_CODIGO_3<<3)|3;
+		tss_zombisA[i].ss     = (GDT_DATA_3<<3)|3;
 		tss_zombisA[i].ss0    = GDT_DATA_0<<3;
-		tss_zombisA[i].ds     = GDT_DATA_3<<3;
-		tss_zombisA[i].es     = GDT_DATA_3<<3;
-		tss_zombisA[i].gs     = GDT_DATA_3<<3;
+		tss_zombisA[i].ds     = (GDT_DATA_3<<3)|3;
+		tss_zombisA[i].es     = (GDT_DATA_3<<3)|3;
+		tss_zombisA[i].gs     = (GDT_DATA_3<<3)|3;
 		tss_zombisA[i].fs     = GDT_VIDEO<<3;
 		tss_zombisA[i].cr3    = 0x09000000; // lo inicializamos con fruta
 		tss_zombisA[i].eflags = 0x00000202;
-		tss_zombisA[i].esp0	  = mmu_proxima_pagina_fisica_libre();
+		tss_zombisA[i].esp0	  = mmu_proxima_pagina_fisica_libre() + PAGE_SIZE;
 
 		gdt[TSS_A+i] = gdt_entry_tss;
 	    gdt[TSS_A+i].base_0_15  = (((int)&tss_zombisA[i])<<16)>>16;
@@ -87,16 +88,16 @@ void tss_zombies(){
     	tss_zombisB[i].eip    = 0x8000000;
 		tss_zombisB[i].esp    = 0x8001000;
 		tss_zombisB[i].ebp    = 0x8001000;
-		tss_zombisB[i].cs     = GDT_CODIGO_3<<3;
-		tss_zombisB[i].ss     = GDT_DATA_3<<3;
+		tss_zombisB[i].cs     = (GDT_DATA_3<<3)|3;
+		tss_zombisB[i].ss     = (GDT_DATA_3<<3)|3;
 		tss_zombisB[i].ss0    = GDT_DATA_0<<3;
-		tss_zombisB[i].ds     = GDT_DATA_3<<3;
-		tss_zombisB[i].es     = GDT_DATA_3<<3;
-		tss_zombisB[i].gs     = GDT_DATA_3<<3;
+		tss_zombisB[i].ds     = (GDT_DATA_3<<3)|3;
+		tss_zombisB[i].es     = (GDT_DATA_3<<3)|3;
+		tss_zombisB[i].gs     = (GDT_DATA_3<<3)|3;
 		tss_zombisB[i].fs     = GDT_VIDEO<<3;
 		tss_zombisB[i].cr3    = 0x09000000; // lo inicializamos con fruta
 		tss_zombisB[i].eflags = 0x00000202;
-		tss_zombisB[i].esp0   = mmu_proxima_pagina_fisica_libre();
+		tss_zombisB[i].esp0   = mmu_proxima_pagina_fisica_libre() + PAGE_SIZE;
 
 		gdt[TSS_B+i] = gdt_entry_tss;
 	    gdt[TSS_B+i].base_0_15  = (((int)&tss_zombisB[i])<<16)>>16;

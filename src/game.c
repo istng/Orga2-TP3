@@ -151,7 +151,7 @@ void game_lanzar_zombi(jugador jug) {
 	// Por último modificamos la info del jugador
 	info_jug->zombies_usados = (info_jug->zombies_usados) + 1;
 	info_jug->ultimo_zombie = indiceZombie;
-	breakpoint();
+	
 }
 
 /*

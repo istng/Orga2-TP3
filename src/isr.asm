@@ -134,10 +134,14 @@ _isr32:
     cmp ax, 0
     je  .nojump
 
-    xchg bx,bx
+    mov ax,15
+    xchg bx, bx
+    shl ax, 3
     mov [sched_tarea_selector], ax
     call fin_intr_pic1
+    xchg bx,bx
     jmp far [sched_tarea_offset]
+
 
     jmp .end
 

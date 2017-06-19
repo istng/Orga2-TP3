@@ -160,10 +160,10 @@ void print_screen(){
 void print_jugador(jugador jug){
 	switch(jug){
 		case JUGADOR_A:
-			print(&(A.zombie_seleccionado->ascii), 0, A.pos, C_FG_LIGHT_BLUE);
+			print(&(A.zombie_seleccionado->ascii), 0, A.pos, C_FG_LIGHT_RED);
 			break;
 		case JUGADOR_B:
-			print(&(B.zombie_seleccionado->ascii), VIDEO_COLS-1, B.pos, C_FG_LIGHT_RED);
+			print(&(B.zombie_seleccionado->ascii), VIDEO_COLS-1, B.pos, C_FG_LIGHT_BLUE);
 			break;
 	}
 }
@@ -184,10 +184,10 @@ void print_limpiar_pos_jugador(jugador jug){
 void print_zombi(jugador jug, unsigned int i, unsigned int j){
   switch(jug){
 		case JUGADOR_A:
-			print(&(A.zombie_seleccionado->ascii), j, i, C_FG_LIGHT_BLUE);
+			print(&(A.zombie_seleccionado->ascii), j, i, C_FG_LIGHT_RED);
 			break;
 		case JUGADOR_B:
-			print(&(B.zombie_seleccionado->ascii), j, i, C_FG_LIGHT_RED);
+			print(&(B.zombie_seleccionado->ascii), j, i, C_FG_LIGHT_BLUE);
 			break;
 	}
 }

@@ -12,18 +12,19 @@ jugador siguiente_jugador = JUGADOR_A;
 
 unsigned short sched_proximo_indice() {
 
+	//cero significa no hago nada, no hace falta tss_idle
 	unsigned short res = 0;
-	breakpoint();
+	
 
 	switch(siguiente_jugador){
 		case JUGADOR_A:
-			//res = A.zombies_usados == 0 ? 0 : TSS_A;// + A.ultimo_zombie - 1;
+			//res = A.zombies_usados == 0 ? 0 : TSS_A + A.ultimo_zombie - 1;
 			//if(A.zombies_usados > 0){
 			//	A.ultimo_zombie = (A.ultimo_zombie + 1) % A.zombies_usados;
 			//}
 			if(A.zombies_usados > 0){
 				res = TSS_A + A.ultimo_zombie - 1;
-				breakpoint();
+				//breakpoint();
 			}
 			siguiente_jugador = JUGADOR_B;
 			break;

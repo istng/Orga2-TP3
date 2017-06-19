@@ -254,7 +254,7 @@ void mappear_entorno_zombi(unsigned int i, unsigned int j, jugador jug, unsigned
 		unsigned int pag_virtual = DIR_TAREAS + k * PAGE_SIZE;
 		unsigned int pag_fisica = pos_a_dirMapa(indices[k][0],indices[k][1]);
 		//print_int(k+1,indices[k][1],indices[k][0],30);
-		mmu_mappear_pagina(pag_virtual,dir_pd,pag_fisica, 0);//???????????????'
+		mmu_mappear_pagina(pag_virtual,dir_pd,pag_fisica, 1);//???????????????'
 
 	}
 
@@ -284,7 +284,7 @@ unsigned int mod_mapa(unsigned int i){
 unsigned int mmu_inicializar_dir_zombi(jugador jug,char tipo){
 	// Inicializamos un directorio para la tarea
  	pde_entry* pd = (pde_entry*) mmu_proxima_pagina_fisica_libre();
-	identity_mapping((unsigned int)pd,0); //?????????????????????
+	identity_mapping((unsigned int)pd,1); //?????????????????????
 
 
 
@@ -321,7 +321,7 @@ unsigned int mmu_inicializar_dir_zombi(jugador jug,char tipo){
 
 	// La página de memoria del mapa donde se va acopiar el código se mapea
 	// de no hacerlo se obtiene un Page Fault
-	mmu_mappear_pagina((unsigned int)posMem, rcr3(), (unsigned int)posMem, 0);
+	mmu_mappear_pagina((unsigned int)posMem, rcr3(), (unsigned int)posMem, 1);
 
 	// Copiamos el codigo
 	//unsigned int cr3 = rcr3();
