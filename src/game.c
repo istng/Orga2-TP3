@@ -155,7 +155,7 @@ void game_lanzar_zombi(jugador jug) {
 	
 }
 
-/*
+
 void game_move_current_zombi(direccion dir) {
 	// Con el objetivo de mover al zombie en el mapa,esta función realiza los siguientes pasos:
 	// 1) Copia al zombie desde la posición (página) actual a la posición destino
@@ -170,7 +170,7 @@ void game_move_current_zombi(direccion dir) {
 
 	info_jugador* jug = jugadorActual() == JUGADOR_A ? &A : &B;
 	unsigned int indice = jug->ultimo_zombie;
-	info_zombie* zombie =  jug == JUGADOR_A ? &zombiesA[indice] : &zombiesB[indice];
+	info_zombie* zombie =  jugadorActual() == JUGADOR_A ? &zombiesA[indice] : &zombiesB[indice];
 
 	// los movimientos de los jugadores son opuestos
 	int orientacion = jug == JUGADOR_A ? -1 : 1;
@@ -200,16 +200,14 @@ void game_move_current_zombi(direccion dir) {
 			break;
 	}
 
-	breakpoint();
 	//Movemos el codigo del zombie
 	char *pagina_original = (char*) DIR_TAREAS;
-	char *pagina_destino = (char*) DIR_TAREAS + pagina_destino_offset;
+	char *pagina_destino = (char*) (DIR_TAREAS + pagina_destino_offset * PAGE_SIZE);
 	unsigned int k;
 	for(k = 0; k<PAGE_SIZE ; k++){
-		pagina_original[k] = pagina_destino[k];
+		pagina_destino[k] = pagina_original[k];
 	}
 
-	breakpoint();
 
 	desmapear_entorno_zombie(zombie->i, zombie->j,rcr3());
 	mappear_entorno_zombi(i,j,jugadorActual(),(unsigned int) rcr3()); 
@@ -233,12 +231,10 @@ void game_move_current_zombi(direccion dir) {
 
 	jug->ultimo_zombie = 0;
 
-	breakpoint();
 }
-*/
 
+/*
 void game_move_current_zombi(direccion dir) {
-
 
 	info_jugador* jug = jugadorActual() == JUGADOR_A ? &A : &B;
 	unsigned int indice = jug->ultimo_zombie;
@@ -249,7 +245,7 @@ void game_move_current_zombi(direccion dir) {
 
 
 	// los movimientos de los jugadores son opuestos
-	unsigned int orientacion = jug == JUGADOR_A ? -1 : 1;
+	int orientacion = jug == JUGADOR_A ? -1 : 1;
 	unsigned int i,j;
 
 	switch(dir){
@@ -273,7 +269,7 @@ void game_move_current_zombi(direccion dir) {
 
 
 
-
+	
 	mappear_entorno_zombi(i,j,jugadorActual(),(unsigned int) rcr3());
 
 	copiar_codigo_zombi(i, j, jugadorActual(), zombie->tipo);
@@ -298,3 +294,4 @@ void game_move_current_zombi(direccion dir) {
 
 
 }
+*/
