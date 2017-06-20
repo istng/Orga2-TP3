@@ -66,6 +66,7 @@ void mappear_entorno_zombi(unsigned int i, unsigned int j, jugador jug, unsigned
 void desmapear_entorno_zombie(unsigned int i, unsigned int j, unsigned int dir_pd );
 unsigned int mmu_inicializar_dir_zombi(jugador jug,char tipo);
 unsigned int mod_mapa(unsigned int i);
+void copiar_codigo_zombi(unsigned int i , unsigned int j, jugador jug, zombie_tipo tipo);
 
 
 #endif	/* !__MMU_H__ */

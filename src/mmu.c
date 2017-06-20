@@ -311,8 +311,6 @@ unsigned int mmu_inicializar_dir_zombi(jugador jug,char tipo){
 			break;
 	}
 
-
-
 	// mappearmos el entorno del zombie
 
 	mappear_entorno_zombi(i,j,jug,(unsigned int) pd);
@@ -342,12 +340,53 @@ void desmapear_entorno_zombie(unsigned int i, unsigned int j, unsigned int dir_p
 
 	// Precondicion: el zombi no se mueve hacia la columna donde esta el jugador contrario.
 
-	
+
 	unsigned int dir_inicial = 0x8000000;
 	int k;
 	for (k = 0; k < 9;++k){
 		unsigned int pagina = dir_inicial + k * PAGE_SIZE;
 		mmu_unmapear_pagina(pagina,dir_pd);
 	}
+
+}
+
+
+
+
+void copiar_codigo_zombi(unsigned int i , unsigned int j, jugador jug, zombie_tipo tipo){
+
+
+	// Posición en el mapa en el cual se va a copiar el código del zombie
+	char *posMem = (char *) pos_a_dirMapa(mod_mapa(i), j);//0x8000000;
+	char *posCodigo;
+
+	//Movemos el codigo del zombie
+	switch (tipo) {
+		case GUERRERO:
+			posCodigo = (char*) (jug == 0 ? 0x10000 : 0x13000);
+			break;
+		case CLERIGO:
+			posCodigo = (char*) (jug == 0 ? 0x11000 : 0x14000);
+			break;
+		case MAGO:
+			posCodigo = (char*) (jug == 0 ? 0x12000 : 0x15000);
+			break;
+	}
+
+	// La página de memoria del mapa donde se va acopiar el código se mapea
+	// de no hacerlo se obtiene un Page Fault
+	mmu_mappear_pagina((unsigned int)posMem, rcr3(), (unsigned int)posMem, 1);
+
+	// Copiamos el codigo
+	//unsigned int cr3 = rcr3();
+	//lcr3((unsigned int)pd);
+	unsigned int k;
+	for(k = 0; k<PAGE_SIZE ; k++){
+		posMem[k] = posCodigo[k];
+	}
+	//lcr3(cr3);
+	// desmapeamos la pagina
+	mmu_unmapear_pagina((unsigned int)posMem, rcr3());
+
 
 }

@@ -137,13 +137,11 @@ _isr32:
     cmp ax, 0
     je  .nojump
 
-    
-    xchg bx, bx
+
     shl ax, 3
     mov [sched_tarea_selector], ax
 
     call fin_intr_pic1
-    xchg bx,bx
     jmp far [sched_tarea_offset]
 
 
@@ -180,12 +178,16 @@ _isr33:
 ;; -------------------------------------------------------------------------- ;;
 global _isr0x66
 _isr0x66:
+
+    ;xchg bx,bx
     pushad
 
     push eax
     call game_move_current_zombi
-
     call fin_intr_pic1
+    pop eax
+    jmp 14<<3:0
+    ;xchg bx,bx
 
     popad
     iret

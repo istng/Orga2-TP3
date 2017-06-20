@@ -155,7 +155,7 @@ void game_lanzar_zombi(jugador jug) {
 	
 }
 
-
+/*
 void game_move_current_zombi(direccion dir) {
 	// Con el objetivo de mover al zombie en el mapa,esta función realiza los siguientes pasos:
 	// 1) Copia al zombie desde la posición (página) actual a la posición destino
@@ -235,4 +235,66 @@ void game_move_current_zombi(direccion dir) {
 
 	breakpoint();
 }
+*/
 
+void game_move_current_zombi(direccion dir) {
+
+
+	info_jugador* jug = jugadorActual() == JUGADOR_A ? &A : &B;
+	unsigned int indice = jug->ultimo_zombie;
+	info_zombie* zombie =  jugadorActual() == JUGADOR_A ? &zombiesA[indice] : &zombiesB[indice];
+
+
+	desmapear_entorno_zombie(zombie->i, zombie->j,rcr3());
+
+
+	// los movimientos de los jugadores son opuestos
+	unsigned int orientacion = jug == JUGADOR_A ? -1 : 1;
+	unsigned int i,j;
+
+	switch(dir){
+		case ADE:
+			i = zombie->i;
+			j = zombie->j + orientacion;
+			break;
+		case IZQ:
+			i = mod_mapa(zombie->i - orientacion);
+			j = zombie->j;
+			break;
+		case DER:
+			i = mod_mapa(zombie->i + orientacion);
+			j = zombie->j;
+			break;
+		case ATR:
+			i = mod_mapa(zombie->i);
+			j = zombie->j - orientacion;
+			break;
+	}
+
+
+
+
+	mappear_entorno_zombi(i,j,jugadorActual(),(unsigned int) rcr3());
+
+	copiar_codigo_zombi(i, j, jugadorActual(), zombie->tipo);
+
+	// Printemo la pantalla (: # )
+
+	print_limpiar_pos_zombi(zombie->i, zombie->j);
+	print_zombi(jugadorActual(),i,j);
+
+
+	// chequeamos si llego al final
+
+
+
+	// Actualizos posicion zombi
+	zombie->i = mod_mapa(i);
+	zombie->j = j;
+
+	// Acutalizamos info de jugador
+
+	jug->ultimo_zombie = 0;
+
+
+}
