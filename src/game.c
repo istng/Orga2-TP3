@@ -189,7 +189,9 @@ void game_move_current_zombi(direccion dir) {
 			break;
 	}
 
+	
 
+	
 	
 
 
@@ -197,7 +199,20 @@ void game_move_current_zombi(direccion dir) {
 
 	// Posición en el mapa en el cual se va a copiar el código del zombie
 	char *posMem = (char *) pos_a_dirMapa(mod_mapa(i), j);//0x8000000;
-	char *posCodigo = (char* )pos_a_dirMapa(zombie->i, zombie->j);
+	char *posCodigo;
+
+	//Movemos el codigo del zombie
+	switch (zombie->tipo) {
+		case GUERRERO:
+			posCodigo = (char*) (jug == 0 ? 0x10000 : 0x13000);
+			break;
+		case CLERIGO:
+			posCodigo = (char*) (jug == 0 ? 0x11000 : 0x14000);
+			break;
+		case MAGO:
+			posCodigo = (char*) (jug == 0 ? 0x12000 : 0x15000);
+			break;
+	}
 	
 	breakpoint();
 
@@ -217,7 +232,6 @@ void game_move_current_zombi(direccion dir) {
 	// chequeamos si llego al final
 
 
-	
 	
 
 
