@@ -9,6 +9,7 @@
 #include "idt.h"
 #include "isr.h"
 #include "game.h"
+#include "sched.h"
 
 #include "tss.h"
 
@@ -164,4 +165,19 @@ void accion_tecla(char scan_code){
             game_lanzar_zombi(JUGADOR_B);
             break;
     }
+}
+
+
+void desalojar_tarea_actual(){
+    // El zombie que estaba corriendo se marca como INACTIVO
+    // con lo cual el scheduler no lo va a poner a correr nunca más
+    info_zombie* zombie_actual = obtener_zombie_actual();
+    zombie_actual->estado = INACTIVO;
+}
+
+info_zombie* obtener_zombie_actual(){
+	info_jugador* jug = jugadorActual() == JUGADOR_A ? &A : &B;
+	unsigned int indice = jug->ultimo_zombie;
+	info_zombie* zombie =  jugadorActual() == JUGADOR_A ? &zombiesA[indice] : &zombiesB[indice];
+    return zombie;
 }

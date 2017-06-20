@@ -21,6 +21,7 @@ extern sched_proximo_indice
 ;; Auxiliares
 extern convert_tecla
 extern accion_tecla
+extern desalojar_tarea_actual
 
 ;; Game
 extern game_move_current_zombi
@@ -57,7 +58,7 @@ mensaje_intr_len equ    $ - mensaje_intr
     dec ebx
     add al, 48
     mov [ebx], al ; se reemplaza X por la centena del numero de interrupcion
-    imprimir_texto_mp mensaje_intr, mensaje_intr_len, 0x07, 24, 34
+    imprimir_texto_mp mensaje_intr, mensaje_intr_len, 0x07, 0, 34
 %endmacro
 
 
@@ -84,9 +85,11 @@ _isr%1:
     pushad
 
     imprimir_interrupcion %1
-    jmp $
-
+    call desalojar_tarea_actual
+    
+    jmp 14<<3:0 ; Tarea idle
     popad
+    iret
 %endmacro
 
 ;;
