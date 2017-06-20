@@ -157,77 +157,67 @@ void game_lanzar_zombi(jugador jug) {
 
 
 void game_move_current_zombi(direccion dir) {
+	// Con el objetivo de mover al zombie en el mapa,esta función realiza los siguientes pasos:
+	// 1) Copia al zombie desde la posición (página) actual a la posición destino
+	//	Tanto la página actual como la destino ya se encuentran mapeadas en el directorio de
+	//	páginas del zombie (es una página del entorno del zombie). La posición de memoria del
+	//	mapa donde se encuentra el zombie está mapeada a la dirección DIR_TAREAS, mientras que
+	//	su entorno se encuentran mapeado a las direcciones DIR_TAREAS + i (i = 1..8), por lo
+	//	tanto, hay que encontrar cual es la direccion DIR_TAREAS + i a la que se mueve.
+	//	Tanto los movimientos como los números 'i' de las páginas de memoria del jugador B se
+	//	encuentran espejados respecto al jugador A. Definimos conveniente una variable a la
+	//	que llamamos 'orientación' para simplificar el código.
 
-	
 	info_jugador* jug = jugadorActual() == JUGADOR_A ? &A : &B;
 	unsigned int indice = jug->ultimo_zombie;
 	info_zombie* zombie =  jug == JUGADOR_A ? &zombiesA[indice] : &zombiesB[indice];
 
-	desmapear_entorno_zombie(zombie->i, zombie->j,rcr3());
-
-	
 	// los movimientos de los jugadores son opuestos
-	unsigned int orientacion = jug == JUGADOR_A ? 0 : 1;
+	int orientacion = jug == JUGADOR_A ? -1 : 1;
+	unsigned int pagina_destino_offset;
 	unsigned int i,j;
 
 	switch(dir){
 		case ADE:
 			i = zombie->i;
 			j = zombie->j + orientacion;
+			pagina_destino_offset = 1;
 			break;
 		case IZQ:
 			i = zombie->i - orientacion;
 			j = zombie->j;
+			pagina_destino_offset = 5;
 			break;
 		case DER:
 			i = zombie->i + orientacion;
 			j = zombie->j;
+			pagina_destino_offset = 4;
 			break;
 		case ATR:
 			i = zombie->i;
 			j = zombie->j - orientacion;
+			pagina_destino_offset = 6;
 			break;
 	}
 
-	
-
-	
-	
-
-
-	mappear_entorno_zombi(i,j,jugadorActual(),(unsigned int) rcr3()); 
-
-	// Posición en el mapa en el cual se va a copiar el código del zombie
-	char *posMem = (char *) pos_a_dirMapa(mod_mapa(i), j);//0x8000000;
-	char *posCodigo;
-
-	//Movemos el codigo del zombie
-	switch (zombie->tipo) {
-		case GUERRERO:
-			posCodigo = (char*) (jug == 0 ? 0x10000 : 0x13000);
-			break;
-		case CLERIGO:
-			posCodigo = (char*) (jug == 0 ? 0x11000 : 0x14000);
-			break;
-		case MAGO:
-			posCodigo = (char*) (jug == 0 ? 0x12000 : 0x15000);
-			break;
-	}
-	
 	breakpoint();
-
+	//Movemos el codigo del zombie
+	char *pagina_original = (char*) DIR_TAREAS;
+	char *pagina_destino = (char*) DIR_TAREAS + pagina_destino_offset;
 	unsigned int k;
 	for(k = 0; k<PAGE_SIZE ; k++){
-		posMem[k] = posCodigo[k];
+		pagina_original[k] = pagina_destino[k];
 	}
 
 	breakpoint();
+
+	desmapear_entorno_zombie(zombie->i, zombie->j,rcr3());
+	mappear_entorno_zombi(i,j,jugadorActual(),(unsigned int) rcr3()); 
+
 	// Printemo la pantalla (: # ) 
 
 	print_limpiar_pos_zombi(zombie->i, zombie->j);
 	print_zombi(jugadorActual(),i,j);
-
-
 
 	// chequeamos si llego al final
 
@@ -243,6 +233,6 @@ void game_move_current_zombi(direccion dir) {
 
 	jug->ultimo_zombie = 0;
 
-
+	breakpoint();
 }
 
