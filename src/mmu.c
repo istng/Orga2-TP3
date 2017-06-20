@@ -90,6 +90,7 @@ void mmu_unmapear_pagina(unsigned int virtual, unsigned int cr3){
 	unsigned int offset_directorio = virtual>>22;
 	unsigned int offset_tabla = (virtual<<10)>>22;
 	unsigned int i;
+	unsigned int cant_paginas_presentes_en_pt = 0;
 
 	pde_entry* pd = (pde_entry*)cr3;
 	pte_entry* pt = (pte_entry*) (unsigned int)(pd[offset_directorio].direccion);
@@ -98,11 +99,11 @@ void mmu_unmapear_pagina(unsigned int virtual, unsigned int cr3){
 
 	for(i = 0; i < 1024; i++){
 		if(pt[i].present != 0){
-			break;
+			cant_paginas_presentes_en_pt++;
 		}
 	}
 
-	if(i != 1024){
+	if(cant_paginas_presentes_en_pt == 0){
 		pd[offset_directorio].present = 0;
 	}
 }
