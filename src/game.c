@@ -158,6 +158,7 @@ void game_lanzar_zombi(jugador jug) {
 
 void game_move_current_zombi(direccion dir) {
 
+	
 	info_jugador* jug = jugadorActual() == JUGADOR_A ? &A : &B;
 	unsigned int indice = jug->ultimo_zombie;
 	info_zombie* zombie =  jug == JUGADOR_A ? &zombiesA[indice] : &zombiesB[indice];
@@ -188,17 +189,24 @@ void game_move_current_zombi(direccion dir) {
 			break;
 	}
 
+
+	
+
+
 	mappear_entorno_zombi(i,j,jugadorActual(),(unsigned int) rcr3()); 
 
 	// Posición en el mapa en el cual se va a copiar el código del zombie
 	char *posMem = (char *) pos_a_dirMapa(mod_mapa(i), j);//0x8000000;
 	char *posCodigo = (char* )pos_a_dirMapa(zombie->i, zombie->j);
 	
+	breakpoint();
+
 	unsigned int k;
 	for(k = 0; k<PAGE_SIZE ; k++){
 		posMem[k] = posCodigo[k];
 	}
 
+	breakpoint();
 	// Printemo la pantalla (: # ) 
 
 	print_limpiar_pos_zombi(zombie->i, zombie->j);

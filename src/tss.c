@@ -70,7 +70,7 @@ void tss_zombies(){
 		tss_zombisA[i].ebp    = 0x8001000;
 		tss_zombisA[i].cs     = (GDT_CODIGO_3<<3)|3;
 		tss_zombisA[i].ss     = (GDT_DATA_3<<3)|3;
-		tss_zombisA[i].ss0    = GDT_DATA_0<<3;
+		tss_zombisA[i].ss0    = (GDT_DATA_0<<3);
 		tss_zombisA[i].ds     = (GDT_DATA_3<<3)|3;
 		tss_zombisA[i].es     = (GDT_DATA_3<<3)|3;
 		tss_zombisA[i].gs     = (GDT_DATA_3<<3)|3;
@@ -90,7 +90,7 @@ void tss_zombies(){
 		tss_zombisB[i].ebp    = 0x8001000;
 		tss_zombisB[i].cs     = (GDT_DATA_3<<3)|3;
 		tss_zombisB[i].ss     = (GDT_DATA_3<<3)|3;
-		tss_zombisB[i].ss0    = GDT_DATA_0<<3;
+		tss_zombisB[i].ss0    = (GDT_DATA_0<<3);
 		tss_zombisB[i].ds     = (GDT_DATA_3<<3)|3;
 		tss_zombisB[i].es     = (GDT_DATA_3<<3)|3;
 		tss_zombisB[i].gs     = (GDT_DATA_3<<3)|3;

@@ -141,7 +141,7 @@ _isr32:
     xchg bx, bx
     shl ax, 3
     mov [sched_tarea_selector], ax
-    
+
     call fin_intr_pic1
     xchg bx,bx
     jmp far [sched_tarea_offset]
@@ -178,13 +178,14 @@ _isr33:
 ;;
 ;; Rutina de atención del Software
 ;; -------------------------------------------------------------------------- ;;
-global _isr102
-_isr102:
+global _isr0x66
+_isr0x66:
     pushad
 
     push eax
     call game_move_current_zombi
-    pop eax
+
+    call fin_intr_pic1
 
     popad
     iret

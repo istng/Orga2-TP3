@@ -31,6 +31,6 @@ void _isr19();
 
 void _isr32(); // Interrupcion de Reloj
 void _isr33(); // Interrupcion de Teclado
-void _isr102(); // Interrupcion de Software
+void _isr0x66(); // Interrupcion de Software
 
 #endif  /* !__ISR_H__ */

@@ -71,7 +71,8 @@ void idt_inicializar() {
     IDT_ENTRY(33);
 
     // Entrada interrupcion de software
-    IDT_ENTRY(102);
+    IDT_ENTRY(0x66);
+    idt[0x66].attr = (unsigned short) 0xEE00; /// la puta madre , me cago en tus privilegios
 
 
 }

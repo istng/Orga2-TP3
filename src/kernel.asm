@@ -158,8 +158,7 @@ modo_protegido:
 
     ; Cargar tarea inicial
     jmp 14<<3:0
-    jmp 15<<3:0
-
+    ; (: #)
     ; Habilitar interrupciones
 
     ; Saltar a la primera tarea: Idle
