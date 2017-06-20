@@ -134,10 +134,11 @@ void identity_mapping(unsigned int directorio,unsigned int user_lvl){
 	pd[0].pagesize = 0;
 	pd[0].global = 0;
 	pd[0].disponible = 0; //??????????????????????????????????????????????????????
-	pd[0].direccion = 0x28000 >> 12; //20 bits altos de la direccion donde se encuentra a pde
+	pd[0].direccion = (unsigned int) pt >> 12; //20 bits altos de la direccion donde se encuentra a pte
 
 
-	int i;for (i = 1; i < 1024; ++i)
+	int i;
+	for (i = 1; i < 1024; ++i)
 	{
 		pd[i].present = 0;
 	}
@@ -304,10 +305,10 @@ unsigned int mmu_inicializar_dir_zombi(jugador jug,char tipo){
 		case 'G':
 			posCodigo = (char*) (jug == 0 ? 0x10000 : 0x13000);
 			break;
-		case 'C':
+		case 'M':
 			posCodigo = (char*) (jug == 0 ? 0x11000 : 0x14000);
 			break;
-		case 'M':
+		case 'C':
 			posCodigo = (char*) (jug == 0 ? 0x12000 : 0x15000);
 			break;
 	}
