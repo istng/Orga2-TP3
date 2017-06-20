@@ -37,6 +37,11 @@ extern mappear_entorno_zombi
 extern inicializar_variables_juego
 
 ;; Saltear seccion de datos
+
+;; Scheduler
+extern sched_inicializar
+
+
 jmp start
 
 
@@ -73,7 +78,7 @@ start:
     imprimir_texto_mr iniciando_mr_msg, iniciando_mr_len, 0x07, 0, 0
 
 
-    ; Habilitar A20
+    ; Habilitar A2sched_proximo_indice0
     call habilitar_A20
     ; Cargar la GDT
     lgdt [GDT_DESC]
@@ -149,7 +154,9 @@ modo_protegido:
     ; Inicializar pantalla, luego de haber cargado todas las estructuras,
     ; variables del juego pero antes de habilitar el controlador de interrupciones y cargar la tarea idle
     call print_screen
-    
+
+    ;Inicializamos el scheduler
+    call sched_inicializar
 
     ; Configurar controlador de interrupciones
     call resetear_pic ; remapeamos pic (teclado a 33 y reloj a 32) a IDT

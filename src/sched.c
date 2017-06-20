@@ -55,7 +55,11 @@ unsigned short sched_proximo_indice() {
 			break;
 	}
 
+	print_int(sched.siguiente_jugador == JUGADOR_A ? 0 : 1,10,8,30);
+	print_int(sched.tareaActual_B,10,9,30);
+	print_int(sched.tareaActual_A,10,10,30);
 
+	
 
 
 	return res;
