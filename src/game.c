@@ -151,6 +151,8 @@ void game_lanzar_zombi(jugador jug) {
 	info_jug->zombies_usados = (info_jug->zombies_usados) + 1;
 	info_jug->ultimo_zombie = indiceZombie;
 
+
+
 }
 
 
@@ -166,9 +168,10 @@ void game_move_current_zombi(direccion dir) {
 	//	encuentran espejados respecto al jugador A. Definimos conveniente una variable a la
 	//	que llamamos 'orientación' para simplificar el código.
 
-	info_jugador* jug = jugadorActual() == JUGADOR_A ? &A : &B;
-	unsigned int indice = jug->ultimo_zombie;
-	info_zombie* zombie =  jugadorActual() == JUGADOR_A ? &zombiesA[indice] : &zombiesB[indice];
+	jugador jugadorAct = jugadorActual();
+	info_jugador* jug = jugadorAct == JUGADOR_A ? &A : &B;
+	unsigned int indice = jugadorAct == JUGADOR_A ? tarea_actual_A() : tarea_actual_B();
+	info_zombie* zombie =  jugadorAct == JUGADOR_A ? &zombiesA[indice] : &zombiesB[indice];
 
 	// los movimientos de los jugadores son opuestos
 	int orientacion = jug == JUGADOR_A ? -1 : 1;
@@ -182,12 +185,12 @@ void game_move_current_zombi(direccion dir) {
 			pagina_destino_offset = 1;
 			break;
 		case IZQ:
-			i = zombie->i - orientacion;
+			i = mod_mapa(zombie->i - orientacion);
 			j = zombie->j;
 			pagina_destino_offset = 5;
 			break;
 		case DER:
-			i = zombie->i + orientacion;
+			i = mod_mapa(zombie->i + orientacion);
 			j = zombie->j;
 			pagina_destino_offset = 4;
 			break;
@@ -206,18 +209,20 @@ void game_move_current_zombi(direccion dir) {
 		pagina_destino[k] = pagina_original[k];
 	}
 
+	breakpoint();
+
 
 	desmapear_entorno_zombie(zombie->i, zombie->j,rcr3());
-	mappear_entorno_zombi(i,j,jugadorActual(),(unsigned int) rcr3());
+	mappear_entorno_zombi(i,j,jugadorAct,(unsigned int) rcr3());
 
 	// Printemo la pantalla (: # )
 
 	print_limpiar_pos_zombi(zombie->i, zombie->j);
-	print_zombi(jugadorActual(),i,j);
+	print_zombi(jugadorAct,i,j);
 
 	// chequeamos si llego al final
 
-
+	breakpoint();
 
 
 
@@ -225,7 +230,6 @@ void game_move_current_zombi(direccion dir) {
 	zombie->i = mod_mapa(i);
 	zombie->j = j;
 
-	// Acutalizamos info de jugador
 
 }
 

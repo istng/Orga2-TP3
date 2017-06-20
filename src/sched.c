@@ -22,12 +22,13 @@ unsigned short sched_proximo_indice() {
 	unsigned short res = 0;
 
 
+
 	switch(sched.siguiente_jugador){
 		case JUGADOR_A:
 			if(A.zombies_usados > 0){
 				unsigned short i;
 				for (i=1;i<=8;i++){
-					unsigned short indice = (A.ultimo_zombie + i) % 7;
+					unsigned short indice = (sched.tareaActual_A + i) % 8;
 					if(zombiesA[indice].estado == ACTIVO){
 						res = TSS_A + indice;
 						sched.tareaActual_A = res;
@@ -36,14 +37,16 @@ unsigned short sched_proximo_indice() {
 				}
 			}
 
+
+
 			sched.siguiente_jugador = JUGADOR_B;
 			break;
 		case JUGADOR_B:
 			if(B.zombies_usados > 0){
 				unsigned short i;
 				for (i=1;i<=8;i++){
-					unsigned short indice = (B.ultimo_zombie + i) % 7;
-					if(zombiesA[indice].estado == ACTIVO){
+					unsigned short indice = (sched.tareaActual_B + i) % 8;
+					if(zombiesB[indice].estado == ACTIVO){
 						res = TSS_B + indice;
 						sched.tareaActual_B = res;
 						break;
@@ -53,13 +56,16 @@ unsigned short sched_proximo_indice() {
 
 			sched.siguiente_jugador = JUGADOR_A;
 			break;
+
+			breakpoint();
 	}
 
 	print_int(sched.siguiente_jugador == JUGADOR_A ? 0 : 1,10,8,30);
 	print_int(sched.tareaActual_B,10,9,30);
 	print_int(sched.tareaActual_A,10,10,30);
 
-	
+	//breakpoint();
+
 
 
 	return res;

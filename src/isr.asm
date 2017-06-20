@@ -86,7 +86,7 @@ _isr%1:
 
     imprimir_interrupcion %1
     call desalojar_tarea_actual
-    
+
     jmp 14<<3:0 ; Tarea idle
     popad
     iret
@@ -136,15 +136,15 @@ _isr32:
 
     call proximo_reloj
     call sched_proximo_indice
-
+    ;xchg bx,bx
     cmp ax, 0
     je  .nojump
 
 
     shl ax, 3
     mov [sched_tarea_selector], ax
-
     call fin_intr_pic1
+    ;xchg bx,bx
     jmp far [sched_tarea_offset]
 
 
@@ -189,6 +189,7 @@ _isr0x66:
     call game_move_current_zombi
     call fin_intr_pic1
     pop eax
+    xchg bx,bx
     jmp 14<<3:0
     ;xchg bx,bx
 
