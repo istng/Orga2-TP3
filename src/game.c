@@ -33,7 +33,6 @@ void inicializar_variables_juego(){
 	A.puntos = 0;
 	A.zombies_usados = 0;
 	A.zombie_seleccionado = &zombie_guerrero;
-	A.ultimo_zombie = 0;
 
 
 	B.jug = JUGADOR_B;
@@ -41,7 +40,6 @@ void inicializar_variables_juego(){
 	B.puntos = 0;
 	B.zombies_usados = 0;
 	B.zombie_seleccionado = &zombie_mago;
-	B.ultimo_zombie = 0;
 
 	int i;
 	for (i = 0; i < 8; ++i){
@@ -116,7 +114,7 @@ void game_lanzar_zombi(jugador jug) {
 
 
 	info_jugador *info_jug = jug == JUGADOR_A ? &A : &B;
-	unsigned short indiceZombie = info_jug->zombies_usados;
+	unsigned short indiceZombie = slot_libre(jug);
 	// Esta linae de abajo no la entendí
 	//unsigned short indiceZombie = info_jug->zombies_usados == 0 ? 0 : info_jug->zombies_usados + 1;
 	info_zombie* zombie =  jug == JUGADOR_A ? &zombiesA[indiceZombie] : &zombiesB[indiceZombie];
@@ -152,7 +150,7 @@ void game_lanzar_zombi(jugador jug) {
 	// Por último modificamos la info del jugador
 	info_jug->zombies_usados = (info_jug->zombies_usados) + 1;
 	info_jug->ultimo_zombie = indiceZombie;
-	
+
 }
 
 
@@ -210,77 +208,16 @@ void game_move_current_zombi(direccion dir) {
 
 
 	desmapear_entorno_zombie(zombie->i, zombie->j,rcr3());
-	mappear_entorno_zombi(i,j,jugadorActual(),(unsigned int) rcr3()); 
-
-	// Printemo la pantalla (: # ) 
-
-	print_limpiar_pos_zombi(zombie->i, zombie->j);
-	print_zombi(jugadorActual(),i,j);
-
-	// chequeamos si llego al final
-
-
-	
-
-
-	// Actualizos posicion zombi 
-	zombie->i = mod_mapa(i);
-	zombie->j = j;
-
-	// Acutalizamos info de jugador
-
-	jug->ultimo_zombie = 0;
-
-}
-
-/*
-void game_move_current_zombi(direccion dir) {
-
-	info_jugador* jug = jugadorActual() == JUGADOR_A ? &A : &B;
-	unsigned int indice = jug->ultimo_zombie;
-	info_zombie* zombie =  jugadorActual() == JUGADOR_A ? &zombiesA[indice] : &zombiesB[indice];
-
-
-	desmapear_entorno_zombie(zombie->i, zombie->j,rcr3());
-
-
-	// los movimientos de los jugadores son opuestos
-	int orientacion = jug == JUGADOR_A ? -1 : 1;
-	unsigned int i,j;
-
-	switch(dir){
-		case ADE:
-			i = zombie->i;
-			j = zombie->j + orientacion;
-			break;
-		case IZQ:
-			i = mod_mapa(zombie->i - orientacion);
-			j = zombie->j;
-			break;
-		case DER:
-			i = mod_mapa(zombie->i + orientacion);
-			j = zombie->j;
-			break;
-		case ATR:
-			i = mod_mapa(zombie->i);
-			j = zombie->j - orientacion;
-			break;
-	}
-
-
-
-	
 	mappear_entorno_zombi(i,j,jugadorActual(),(unsigned int) rcr3());
-
-	copiar_codigo_zombi(i, j, jugadorActual(), zombie->tipo);
 
 	// Printemo la pantalla (: # )
 
 	print_limpiar_pos_zombi(zombie->i, zombie->j);
 	print_zombi(jugadorActual(),i,j);
 
-
 	// chequeamos si llego al final
+
+
 
 
 
@@ -290,8 +227,36 @@ void game_move_current_zombi(direccion dir) {
 
 	// Acutalizamos info de jugador
 
-	jug->ultimo_zombie = 0;
+}
 
+
+
+unsigned int hay_slot_libre(jugador jug){
+	// devuelve 1 si el jugador tiene lugar para insertar un zombie, 0 si no.
+	unsigned int i = 0;
+	unsigned int res = 0;
+	info_zombie* zombies =  jug == JUGADOR_A ? (info_zombie*) &zombiesA: ( info_zombie*) &zombiesB;
+	for (i = 0; i<8; i++){
+		if (zombies[i].estado == INACTIVO){
+			return 1;
+		}
+	}
+	return res;
+}
+
+
+
+unsigned short slot_libre(jugador jug){
+	// Esta funcion nos da la proxima posicion libre el arreglo de zombies del jugador
+	// donde podemos insertar un nuevo zombi
+
+	unsigned int i;
+	info_zombie* zombies =  jug == JUGADOR_A ? (info_zombie*) &zombiesA: (info_zombie*) &zombiesB;
+	for (i = 0;i < 8 ;i++){
+		if(zombies[i].estado == INACTIVO){
+			return i;
+		}
+	}
+	return 0;
 
 }
-*/

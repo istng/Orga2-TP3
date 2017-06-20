@@ -80,6 +80,8 @@ void mmu_mappear_pagina(unsigned int virtual, unsigned int dir_pd, unsigned int 
 		pt[offset_tabla].direccion = fisica>>12;
 	}
 
+	tlbflush();
+
 }
 
 
@@ -106,6 +108,8 @@ void mmu_unmapear_pagina(unsigned int virtual, unsigned int cr3){
 	if(cant_paginas_presentes_en_pt == 0){
 		pd[offset_directorio].present = 0;
 	}
+
+	tlbflush();
 }
 
 

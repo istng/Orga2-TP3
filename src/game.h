@@ -30,7 +30,7 @@ typedef struct str_info_jugador {
 	unsigned short 	puntos;					//tamaño abritrario pero suficiente, el primer jugador que suma 10 puntos gana
 	unsigned short 	zombies_usados; 	    //hay 8 zombies posibles por jugador
 	nodo_zombie 	*zombie_seleccionado;	//hay 3 tipos de zombies
-	unsigned short 	ultimo_zombie;			//indice del ultimo zombie usado				
+	unsigned short 	ultimo_zombie;			//indice del ultimo zombie usado
 } info_jugador;
 
 
@@ -57,7 +57,12 @@ void game_jugador_mover(jugador jug, jugador_direccion dir);
 void game_jugador_cambiar_zombie(jugador jug, jugador_zombie_lista dir);
 
 void game_lanzar_zombi(jugador jug);
+
+unsigned short slot_libre(jugador jug);
+unsigned int hay_slot_libre(jugador jug);
+
 /*
+
 void game_move_current_zombi(direccion dir);
 */
 

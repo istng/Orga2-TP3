@@ -8,38 +8,53 @@
 #include "sched.h"
 #include "game.h"
 
-jugador siguiente_jugador = JUGADOR_A;
+scheduler sched;
+
+void sched_inicializar(){
+	sched.siguiente_jugador = JUGADOR_A;
+	sched.tareaActual_A = 0;
+	sched.tareaActual_B = 0;
+}
 
 unsigned short sched_proximo_indice() {
 
 	//cero significa no hago nada, no hace falta tss_idle
 	unsigned short res = 0;
-	
 
-	switch(siguiente_jugador){
+
+	switch(sched.siguiente_jugador){
 		case JUGADOR_A:
-			//res = A.zombies_usados == 0 ? 0 : TSS_A + A.ultimo_zombie - 1;
-			//if(A.zombies_usados > 0){
-			//	A.ultimo_zombie = (A.ultimo_zombie + 1) % A.zombies_usados;
-			//}
 			if(A.zombies_usados > 0){
-				res = TSS_A + (A.ultimo_zombie % A.zombies_usados ) ;
-				//breakpoint();
+				unsigned short i;
+				for (i=1;i<=8;i++){
+					unsigned short indice = (A.ultimo_zombie + i) % 7;
+					if(zombiesA[indice].estado == ACTIVO){
+						res = TSS_A + indice;
+						sched.tareaActual_A = res;
+						break;
+					}
+				}
 			}
-			siguiente_jugador = JUGADOR_B;
+
+			sched.siguiente_jugador = JUGADOR_B;
 			break;
 		case JUGADOR_B:
-			//res = B.zombies_usados == 0 ? 0 : TSS_B;// + B.ultimo_zombie - 1;
-			//if(B.zombies_usados > 0){
-			//	B.ultimo_zombie = (B.ultimo_zombie + 1) % B.zombies_usados;
-			//}
 			if(B.zombies_usados > 0){
-				res = TSS_B + (B.ultimo_zombie % B.zombies_usados );
-				
+				unsigned short i;
+				for (i=1;i<=8;i++){
+					unsigned short indice = (B.ultimo_zombie + i) % 7;
+					if(zombiesA[indice].estado == ACTIVO){
+						res = TSS_B + indice;
+						sched.tareaActual_B = res;
+						break;
+					}
+				}
 			}
-			siguiente_jugador = JUGADOR_A;
+
+			sched.siguiente_jugador = JUGADOR_A;
 			break;
 	}
+
 
 
 
@@ -47,8 +62,10 @@ unsigned short sched_proximo_indice() {
 
 }
 
+
+
 jugador jugadorActual(){
-	if (siguiente_jugador == JUGADOR_A)
+	if (sched.siguiente_jugador == JUGADOR_A)
 	{
 		return JUGADOR_B;
 	}
@@ -57,3 +74,11 @@ jugador jugadorActual(){
 	}
 }
 
+unsigned short tarea_actual_A(){
+	return sched.tareaActual_A;
+}
+
+
+unsigned short tarea_actual_B(){
+	return sched.tareaActual_B;
+}
