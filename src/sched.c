@@ -27,12 +27,6 @@ unsigned short sched_proximo_indice(){
 	unsigned short sig_zoombie = 0;
 	if(hay_zoombies_activos(sched.siguiente_jugador)){
 		sig_zoombie = indice_siguiente_zoombie_activo(sched.siguiente_jugador, indice);
-		
-
-		//if(sched.tarea_actual_es_idle == TRUE){
-		//	sched.tarea_actual_es_idle = FALSE;
-		//	res = sig_zoombie + TSS_actual;
-		//}
 
 		if(sched.hay_tareas_corriendo == FALSE){
 			res = sig_zoombie + TSS_actual;
@@ -40,10 +34,10 @@ unsigned short sched_proximo_indice(){
 		} 
 
 		if(*tarea_actual != sig_zoombie){
-			breakpoint();
 			*tarea_actual = sig_zoombie;
-			res = sig_zoombie + TSS_actual;
+			
 		}
+		res = sig_zoombie + TSS_actual;
 	} 
 	cambiar_siguiente_jugador();
 

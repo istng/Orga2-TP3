@@ -209,9 +209,6 @@ void game_move_current_zombi(direccion dir) {
 		pagina_destino[k] = pagina_original[k];
 	}
 
-	breakpoint();
-
-
 	desmapear_entorno_zombie(zombie->i, zombie->j,rcr3());
 	mappear_entorno_zombi(i,j,jugadorAct,(unsigned int) rcr3());
 
@@ -222,15 +219,13 @@ void game_move_current_zombi(direccion dir) {
 
 	// chequeamos si llego al final
 
-	breakpoint();
+
 
 
 
 	// Actualizos posicion zombi
 	zombie->i = mod_mapa(i);
 	zombie->j = j;
-
-
 }
 
 
@@ -297,19 +292,20 @@ unsigned short indice_siguiente_zoombie_activo(jugador jug, unsigned short indic
 	unsigned short indice_sig_zoombie_act = indice;
 	info_zombie *zombies = obtener_arreglo_zoombies(jug);
 	unsigned short i;
+	int indice_sig_zoombie_act_encontrado = FALSE;
 
-	for(i = indice+1; i < CANT_ZOMBIS; i++){
+	for(i = indice+1; i < CANT_ZOMBIS && !indice_sig_zoombie_act_encontrado; i++){
 		if(zombies[i].estado == ACTIVO){
 			indice_sig_zoombie_act = i;
-			break;
+			indice_sig_zoombie_act_encontrado = TRUE;
 		}
 	}
 
-	if(indice_sig_zoombie_act == indice){
-		for(i = 0; i < indice; i++){
+	if(indice_sig_zoombie_act_encontrado == FALSE){
+		for(i = 0; i < indice && !indice_sig_zoombie_act_encontrado; i++){
 			if(zombies[i].estado == ACTIVO){
 				indice_sig_zoombie_act = i;
-				break;
+				indice_sig_zoombie_act_encontrado = TRUE;
 			}
 		}
 	}

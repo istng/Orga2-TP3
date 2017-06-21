@@ -189,7 +189,7 @@ _isr0x66:
     call game_move_current_zombi
     call fin_intr_pic1
     pop eax
-    xchg bx,bx
+    ;xchg bx,bx
     jmp 14<<3:0
     ;xchg bx,bx
 
