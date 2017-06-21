@@ -14,8 +14,43 @@ void sched_inicializar(){
 	sched.siguiente_jugador = JUGADOR_A;
 	sched.tareaActual_A = 0;
 	sched.tareaActual_B = 0;
+	sched.hay_tareas_corriendo = FALSE;
 }
 
+
+unsigned short sched_proximo_indice(){
+	//cero significa no hago nada, no hace falta tss_idle
+	unsigned short res = 0;
+	unsigned short TSS_actual = sched.siguiente_jugador == JUGADOR_A ? TSS_A : TSS_B;
+	unsigned short *tarea_actual = sched.siguiente_jugador == JUGADOR_A ? (unsigned short*) &sched.tareaActual_A : (unsigned short*) &sched.tareaActual_B;
+	unsigned short indice = *tarea_actual;
+	unsigned short sig_zoombie = 0;
+	if(hay_zoombies_activos(sched.siguiente_jugador)){
+		sig_zoombie = indice_siguiente_zoombie_activo(sched.siguiente_jugador, indice);
+		
+
+		//if(sched.tarea_actual_es_idle == TRUE){
+		//	sched.tarea_actual_es_idle = FALSE;
+		//	res = sig_zoombie + TSS_actual;
+		//}
+
+		if(sched.hay_tareas_corriendo == FALSE){
+			res = sig_zoombie + TSS_actual;
+			sched.hay_tareas_corriendo = TRUE;
+		} 
+
+		if(*tarea_actual != sig_zoombie){
+			breakpoint();
+			*tarea_actual = sig_zoombie;
+			res = sig_zoombie + TSS_actual;
+		}
+	} 
+	cambiar_siguiente_jugador();
+
+	return res;
+}
+
+/*
 unsigned short sched_proximo_indice() {
 
 	//cero significa no hago nada, no hace falta tss_idle
@@ -71,7 +106,7 @@ unsigned short sched_proximo_indice() {
 	return res;
 
 }
-
+*/
 
 
 jugador jugadorActual(){
@@ -91,4 +126,15 @@ unsigned short tarea_actual_A(){
 
 unsigned short tarea_actual_B(){
 	return sched.tareaActual_B;
+}
+
+
+void cambiar_siguiente_jugador(){
+	if (sched.siguiente_jugador == JUGADOR_A)
+	{
+		sched.siguiente_jugador = JUGADOR_B;
+	}
+	else{
+		sched.siguiente_jugador = JUGADOR_A;
+	}
 }

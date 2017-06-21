@@ -264,3 +264,55 @@ unsigned short slot_libre(jugador jug){
 	return 0;
 
 }
+
+
+info_zombie* obtener_arreglo_zoombies(jugador jug){
+	info_zombie* zombies = jug == JUGADOR_A ? (info_zombie*) &zombiesA : (info_zombie*) &zombiesB;
+	return zombies;
+}
+
+
+unsigned int hay_zoombies_activos(jugador jug){
+	unsigned int res = FALSE;
+	info_zombie *zombies = obtener_arreglo_zoombies(jug);
+	unsigned short i;
+
+	for(i = 0; i < CANT_ZOMBIS; i++){
+		if(zombies[i].estado == ACTIVO){
+			res = TRUE;
+		}
+	}
+
+	return res;
+}
+
+
+unsigned short indice_siguiente_zoombie_activo(jugador jug, unsigned short indice){
+	// Esta función devuelve el índice en el arreglo del siguiente zoombie activo del
+	// jugador jug. 
+	// En caso de alcanzar el límite del arreglo, empieza a buscar desde el principio.
+	// En caso de que haya un solo zoombie activo, devuelve el mismo índice.
+	// Esta función asume que hay_zoombies_activos devuelve TRUE
+
+	unsigned short indice_sig_zoombie_act = indice;
+	info_zombie *zombies = obtener_arreglo_zoombies(jug);
+	unsigned short i;
+
+	for(i = indice+1; i < CANT_ZOMBIS; i++){
+		if(zombies[i].estado == ACTIVO){
+			indice_sig_zoombie_act = i;
+			break;
+		}
+	}
+
+	if(indice_sig_zoombie_act == indice){
+		for(i = 0; i < indice; i++){
+			if(zombies[i].estado == ACTIVO){
+				indice_sig_zoombie_act = i;
+				break;
+			}
+		}
+	}
+
+	return indice_sig_zoombie_act;
+}
