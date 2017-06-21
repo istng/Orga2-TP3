@@ -195,3 +195,14 @@ void print_zombi(jugador jug, unsigned int i, unsigned int j){
 void print_limpiar_pos_zombi(unsigned int i,unsigned int j){
     print("X",j,i,0x27);
 }
+
+
+void screen_anotarPuntos(jugador jug){
+
+  unsigned int p = puntos(jug);
+  switch (jug) {
+    case JUGADOR_A: print_int(p,36,47,0x4F); break;
+    case JUGADOR_B: print_int(p,41,47,0x1F); break;
+  }
+
+}

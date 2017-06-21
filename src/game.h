@@ -65,6 +65,9 @@ info_zombie* obtener_arreglo_zoombies(jugador jug);
 unsigned int hay_zoombies_activos(jugador jug);
 unsigned short indice_siguiente_zoombie_activo(jugador jug, unsigned short indice);
 
+unsigned int llego_al_final(jugador jug, info_zombie * zombie);
+unsigned int puntos(jugador jug);
+
 /*
 
 void game_move_current_zombi(direccion dir);

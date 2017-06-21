@@ -136,7 +136,7 @@ _isr32:
 
     call proximo_reloj
     call sched_proximo_indice
-    ;xchg bx,bx
+    ;xchg bx,bx ; Breakpoint isr32
     cmp ax, 0
     je  .nojump
 

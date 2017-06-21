@@ -148,7 +148,6 @@ modo_protegido:
     ; Cargar IDT
     lidt [IDT_DESC]
 
-    xchg bx, bx
 
     call inicializar_variables_juego
     ; Inicializar pantalla, luego de haber cargado todas las estructuras,

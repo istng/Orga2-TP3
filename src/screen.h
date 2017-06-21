@@ -36,4 +36,6 @@ void print_zombi(jugador jug, unsigned int i, unsigned int j);
 
 void print_limpiar_pos_zombi(unsigned int i,unsigned int j);
 
+void screen_anotarPuntos(jugador jug);
+
 #endif  /* !__SCREEN_H__ */

@@ -114,7 +114,6 @@ void tss_inicializar_zombi(jugador jug,unsigned int indice, unsigned int cr3){
 			break;
 		case JUGADOR_B:
 			tss_zombisB[indice].cr3 = cr3;
-			breakpoint();
 			break;
 	}
 }

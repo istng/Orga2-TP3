@@ -7,6 +7,7 @@
 #include "game.h"
 #include "tss.h"
 #include "sched.h"
+#include "idt.h"
 
 info_jugador A;
 info_jugador B;
@@ -112,7 +113,6 @@ void game_jugador_cambiar_zombie(jugador jug, jugador_zombie_lista dir){
 
 void game_lanzar_zombi(jugador jug) {
 
-
 	info_jugador *info_jug = jug == JUGADOR_A ? &A : &B;
 	unsigned short indiceZombie = slot_libre(jug);
 	// Esta linae de abajo no la entendí
@@ -174,7 +174,7 @@ void game_move_current_zombi(direccion dir) {
 	info_zombie* zombie =  jugadorAct == JUGADOR_A ? &zombiesA[indice] : &zombiesB[indice];
 
 	// los movimientos de los jugadores son opuestos
-	int orientacion = jug == JUGADOR_A ? -1 : 1;
+	int orientacion = jugadorAct == JUGADOR_A ? 1 : -1;
 	unsigned int pagina_destino_offset;
 	unsigned int i,j;
 
@@ -200,14 +200,26 @@ void game_move_current_zombi(direccion dir) {
 			pagina_destino_offset = 6;
 			break;
 	}
+ /*
+	print_int(pagina_destino_offset,20,18,30);
+	print_int(orientacion==1,20,19,30);
+	print_int(zombie->i,20,20,30);
+	print_int(zombie->j,20,21,30);
+	print_int(i,20,22,30);
+	print_int(j,20,23,30);
+*/
 
 	//Movemos el codigo del zombie
 	char *pagina_original = (char*) DIR_TAREAS;
 	char *pagina_destino = (char*) (DIR_TAREAS + pagina_destino_offset * PAGE_SIZE);
+	//print_hex((unsigned int)pagina_original,8,20,16,30);
+	//print_hex((unsigned int)pagina_destino,8,20,17,30);
 	unsigned int k;
 	for(k = 0; k<PAGE_SIZE ; k++){
 		pagina_destino[k] = pagina_original[k];
 	}
+
+
 
 	desmapear_entorno_zombie(zombie->i, zombie->j,rcr3());
 	mappear_entorno_zombi(i,j,jugadorAct,(unsigned int) rcr3());
@@ -215,18 +227,47 @@ void game_move_current_zombi(direccion dir) {
 	// Printemo la pantalla (: # )
 
 	print_limpiar_pos_zombi(zombie->i, zombie->j);
-	print_zombi(jugadorAct,i,j);
+
 
 	// chequeamos si llego al final
+	if (llego_al_final(jugadorAct,zombie)){
+		desalojar_tarea_actual();
+		jug->zombies_usados -= 1;
+		jug->puntos += 1;
+		screen_anotarPuntos(jugadorAct);
+		//screen_zombie_cadaver(zombie->i, zombie->j)
 
-
-
-
+	}
+	// si no llego al final:
+	print_zombi(jugadorAct,i,j);
 
 	// Actualizos posicion zombi
 	zombie->i = mod_mapa(i);
 	zombie->j = j;
+
+
 }
+
+
+
+unsigned int puntos(jugador jug){
+	unsigned int res = 0;
+	switch (jug) {
+		case JUGADOR_A: res =  A.puntos;break;
+		case JUGADOR_B: res =  B.puntos;break;
+	}
+	return res;
+}
+
+unsigned int llego_al_final(jugador jug, info_zombie * zombie){
+	unsigned int res = 0;
+	switch (jug) {
+		case JUGADOR_A: res = (zombie->j == SIZE_W); break;
+		case JUGADOR_B: res = (zombie->j == 1); break;
+	}
+	return res;
+}
+
 
 
 
@@ -284,7 +325,7 @@ unsigned int hay_zoombies_activos(jugador jug){
 
 unsigned short indice_siguiente_zoombie_activo(jugador jug, unsigned short indice){
 	// Esta función devuelve el índice en el arreglo del siguiente zoombie activo del
-	// jugador jug. 
+	// jugador jug.
 	// En caso de alcanzar el límite del arreglo, empieza a buscar desde el principio.
 	// En caso de que haya un solo zoombie activo, devuelve el mismo índice.
 	// Esta función asume que hay_zoombies_activos devuelve TRUE
