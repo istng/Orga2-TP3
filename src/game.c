@@ -8,6 +8,7 @@
 #include "tss.h"
 #include "sched.h"
 #include "idt.h"
+#include "isr.h"
 
 info_jugador A;
 info_jugador B;
@@ -32,14 +33,12 @@ void inicializar_variables_juego(){
 	A.jug = JUGADOR_A;
 	A.pos = 20;
 	A.puntos = 0;
-	A.zombies_usados = 0;
 	A.zombie_seleccionado = &zombie_guerrero;
 
 
 	B.jug = JUGADOR_B;
 	B.pos = 20;
 	B.puntos = 0;
-	B.zombies_usados = 0;
 	B.zombie_seleccionado = &zombie_mago;
 
 	int i;
@@ -115,8 +114,6 @@ void game_lanzar_zombi(jugador jug) {
 
 	info_jugador *info_jug = jug == JUGADOR_A ? &A : &B;
 	unsigned short indiceZombie = slot_libre(jug);
-	// Esta linae de abajo no la entendí
-	//unsigned short indiceZombie = info_jug->zombies_usados == 0 ? 0 : info_jug->zombies_usados + 1;
 	info_zombie* zombie =  jug == JUGADOR_A ? &zombiesA[indiceZombie] : &zombiesB[indiceZombie];
 	char tipoZombie = info_jug->zombie_seleccionado->ascii;
 
@@ -147,10 +144,12 @@ void game_lanzar_zombi(jugador jug) {
 	// Lo pintamos en el mapa
 	print_zombi(jug,zombie->i,zombie->j);
 
-	// Por último modificamos la info del jugador
-	info_jug->zombies_usados = (info_jug->zombies_usados) + 1;
-	info_jug->ultimo_zombie = indiceZombie;
 
+	int i;
+	for (i = 0; i < 8; ++i){
+		print_int(zombiesA[i].estado == INACTIVO ? 0 : 1, 10,i,30);
+		print_int(zombiesB[i].estado == INACTIVO ? 0 : 1, 10,i+8,30);
+	}
 
 
 }
@@ -172,6 +171,7 @@ void game_move_current_zombi(direccion dir) {
 	info_jugador* jug = jugadorAct == JUGADOR_A ? &A : &B;
 	unsigned int indice = jugadorAct == JUGADOR_A ? tarea_actual_A() : tarea_actual_B();
 	info_zombie* zombie =  jugadorAct == JUGADOR_A ? &zombiesA[indice] : &zombiesB[indice];
+	//clock_tick_zombie(jugadorAct,indice);
 
 	// los movimientos de los jugadores son opuestos
 	int orientacion = jugadorAct == JUGADOR_A ? 1 : -1;
@@ -226,27 +226,59 @@ void game_move_current_zombi(direccion dir) {
 
 	// Printemo la pantalla (: # )
 
-	print_limpiar_pos_zombi(zombie->i, zombie->j);
 
+
+	// chequeamos si se comio otra tarea
+
+	if(hay_otra_tarea(i,j)){
+		breakpoint();
+		jugador el_de_la_otra_tarea = el_jugador_que_tiene_la_otra_tarea(i,j);
+		unsigned int tarea = la_otra_tarea(i,j);
+		desalojar_tarea(tarea, el_de_la_otra_tarea);
+		int i;
+		for (i = 0; i < 8; ++i){
+			print_int(zombiesA[i].estado == INACTIVO ? 0 : 1, 10,i,30);
+			print_int(zombiesB[i].estado == INACTIVO ? 0 : 1, 10,i+8,30);
+		}
+		breakpoint();
+	}
+
+
+	print_limpiar_pos_zombi(zombie->i, zombie->j);
 
 	// chequeamos si llego al final
 	if (llego_al_final(jugadorAct,zombie)){
+
 		desalojar_tarea_actual();
-		jug->zombies_usados -= 1;
 		jug->puntos += 1;
 		screen_anotarPuntos(jugadorAct);
-		//screen_zombie_cadaver(zombie->i, zombie->j)
-
+		screen_zombie_cadaver(zombie->i, zombie->j);
 	}
 	// si no llego al final:
-	print_zombi(jugadorAct,i,j);
+	else{
+		print_zombi(jugadorAct,i,j);
+		// Actualizos posicion zombi
+		zombie->i = mod_mapa(i);
+		zombie->j = j;
+	}
 
-	// Actualizos posicion zombi
-	zombie->i = mod_mapa(i);
-	zombie->j = j;
 
 
 }
+
+
+void clock_tick_zombie(jugador jug, unsigned int indice){
+
+	unsigned int offset;
+	switch (jug) {
+		case JUGADOR_A: offset = 4; break;
+		case JUGADOR_B: offset = 60; break;
+	}
+	tick_reloj_zombie(offset + indice*2);
+
+}
+
+
 
 
 
@@ -261,7 +293,7 @@ unsigned int puntos(jugador jug){
 
 unsigned int llego_al_final(jugador jug, info_zombie * zombie){
 	unsigned int res = 0;
-	switch (jug) {
+	switch (zombie->jug) {
 		case JUGADOR_A: res = (zombie->j == SIZE_W); break;
 		case JUGADOR_B: res = (zombie->j == 1); break;
 	}
@@ -352,4 +384,56 @@ unsigned short indice_siguiente_zoombie_activo(jugador jug, unsigned short indic
 	}
 
 	return indice_sig_zoombie_act;
+}
+
+
+unsigned int hay_otra_tarea(unsigned int i , unsigned int j){
+	unsigned int res = 0;
+	unsigned int k;
+	for (k = 0; k < 8; k++){
+		if (zombiesA[k].i == i && zombiesA[k].j == j && zombiesA[k].estado == ACTIVO){res = 1;}
+		if (zombiesB[k].i == i && zombiesB[k].j == j && zombiesB[k].estado == ACTIVO){res = 1;}
+	}
+	return res;
+}
+
+jugador el_jugador_que_tiene_la_otra_tarea(unsigned int i , unsigned int j){
+	jugador res;
+	unsigned int k;
+	for (k = 0; k < 8; k++){
+		if (zombiesA[k].i == i && zombiesA[k].j == j){res = JUGADOR_A; break;}
+		if (zombiesB[k].i == i && zombiesB[k].j == j){res = JUGADOR_B; break;}
+	}
+	return res;
+}
+
+unsigned int la_otra_tarea(unsigned int i , unsigned int j){
+	unsigned int res = 0;
+	unsigned int k;
+	for (k = 0; k < 8; k++){
+		if (zombiesA[k].i == i && zombiesA[k].j == j){res = k; break;}
+		if (zombiesB[k].i == i && zombiesB[k].j == j){res = k; break;}
+	}
+	return res;
+}
+
+void desalojar_tarea_actual(){
+    // El zombie que estaba corriendo se marca como INACTIVO
+    // con lo cual el scheduler no lo va a poner a correr nunca más
+    info_zombie* zombie_actual = obtener_zombie_actual();
+    zombie_actual->estado = INACTIVO;
+}
+
+void desalojar_tarea(unsigned int indice, jugador jug){
+    // El zombie que estaba corriendo se marca como INACTIVO
+    // con lo cual el scheduler no lo va a poner a correr nunca más
+    info_zombie* zombies = obtener_arreglo_zoombies(jug);
+    zombies[indice].estado = INACTIVO;
+}
+
+
+
+info_zombie* obtener_zombie_actual(){
+	info_zombie* zombie =  jugadorActual() == JUGADOR_A ? &zombiesA[tarea_actual_A()] : &zombiesB[tarea_actual_B()];
+    return zombie;
 }

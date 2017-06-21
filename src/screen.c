@@ -206,3 +206,8 @@ void screen_anotarPuntos(jugador jug){
   }
 
 }
+
+
+void screen_zombie_cadaver (unsigned int i , unsigned int j){
+    print("X",j,i,0x24);
+}

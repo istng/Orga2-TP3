@@ -7,18 +7,20 @@
 #include "colors.h"
 #include "defines.h"
 #include "game.h"
-#include "syscall.h" 
+#include "syscall.h"
 
 void task() {
     /* Tarea */
     int i;
+estoNoSeHace:
     for(i=0;i<100;i++) {
-      syscall_mover(ADE); 
-      syscall_mover(DER); 
-      syscall_mover(ADE); 
-      syscall_mover(ADE); 
+      syscall_mover(ADE);
+      syscall_mover(DER);
+      syscall_mover(ADE);
+      syscall_mover(ADE);
       syscall_mover(IZQ);
-      syscall_mover(ADE); 
+      syscall_mover(ADE);
     }
+    goto estoNoSeHace;
   while(1) { __asm __volatile("mov $2, %%eax":::"eax"); }
 }

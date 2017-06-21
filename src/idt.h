@@ -33,10 +33,8 @@ void idt_inicializar();
 //AUXILIARES A PASAR
 char convert_tecla(char scan_code);
 void accion_tecla(char scan_code);
-void desalojar_tarea_actual();
 
-// ESTA FUNCION TIENE QUE ESTAR EN game.h CLARAMENTE
-info_zombie* obtener_zombie_actual();
+
 
 
 #endif  /* !__IDT_H__ */

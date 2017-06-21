@@ -38,6 +38,9 @@ unsigned short sched_proximo_indice(){
 		res = sig_zoombie + TSS_actual;
 	}
 	cambiar_siguiente_jugador();
+	unsigned int i = 0 + (unsigned int) res;
+	print_int(1000,5,5,30);
+	print_int(i,5,5,30);
 
 	return res;
 }

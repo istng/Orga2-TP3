@@ -140,8 +140,9 @@ void accion_tecla(char scan_code){
             print_jugador(JUGADOR_A);
             break;
         case '<':
-            game_lanzar_zombi(JUGADOR_A);
-            print("termino",20,20,0x22);
+            if (hay_slot_libre(JUGADOR_A)) {
+              game_lanzar_zombi(JUGADOR_A);
+            }
             break;
         case 'I':
             print_limpiar_pos_jugador(JUGADOR_B);
@@ -162,22 +163,9 @@ void accion_tecla(char scan_code){
             print_jugador(JUGADOR_B);
             break;
         case '>':
-            game_lanzar_zombi(JUGADOR_B);
+            if (hay_slot_libre(JUGADOR_B)){
+                game_lanzar_zombi(JUGADOR_B);
+            }
             break;
     }
-}
-
-
-void desalojar_tarea_actual(){
-    // El zombie que estaba corriendo se marca como INACTIVO
-    // con lo cual el scheduler no lo va a poner a correr nunca más
-    info_zombie* zombie_actual = obtener_zombie_actual();
-    zombie_actual->estado = INACTIVO;
-}
-
-info_zombie* obtener_zombie_actual(){
-	info_jugador* jug = jugadorActual() == JUGADOR_A ? &A : &B;
-	unsigned int indice = jug->ultimo_zombie;
-	info_zombie* zombie =  jugadorActual() == JUGADOR_A ? &zombiesA[indice] : &zombiesB[indice];
-    return zombie;
 }

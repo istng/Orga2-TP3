@@ -222,3 +222,20 @@ proximo_reloj:
                 imprimir_texto_mp ebx, 1, 0x0f, 49, 79
                 popad
         ret
+
+
+global tick_reloj_zombie
+tick_reloj_zombie:
+pop eax
+pushad
+inc DWORD [isrnumero]
+mov ebx, [isrnumero]
+cmp ebx, 0x4
+jl .ok
+        mov DWORD [isrnumero], 0x0
+        mov ebx, 0
+.ok:
+        add ebx, isrClock
+        imprimir_texto_mp ebx, 1, 0x0f, 47, 4
+        popad
+ret
