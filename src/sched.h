@@ -17,7 +17,6 @@ typedef struct str_scheduler {
 	jugador			siguiente_jugador;		// jugador al que le corresponde mover su zombie
   unsigned short tareaActual_A;     // proxima tarea a ejecutarse de A
   unsigned short tareaActual_B;     // proxima tarea a ejecutarse de B
-  unsigned short hay_tareas_corriendo;  // bool
 } scheduler;
 
 

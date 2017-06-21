@@ -14,29 +14,27 @@ void sched_inicializar(){
 	sched.siguiente_jugador = JUGADOR_A;
 	sched.tareaActual_A = 0;
 	sched.tareaActual_B = 0;
-	sched.hay_tareas_corriendo = FALSE;
 }
 
 
 unsigned short sched_proximo_indice(){
 	//cero significa no hago nada, no hace falta tss_idle
 	unsigned short res = 0;
-	unsigned short TSS_actual = sched.siguiente_jugador == JUGADOR_A ? TSS_A : TSS_B;
-	unsigned short *tarea_actual = sched.siguiente_jugador == JUGADOR_A ? (unsigned short*) &sched.tareaActual_A : (unsigned short*) &sched.tareaActual_B;
-	unsigned short indice = *tarea_actual;
 	unsigned short sig_zoombie = 0;
+	unsigned short TSS_actual;
+	unsigned short *tarea_actual;
+
+	if(sched.siguiente_jugador == JUGADOR_A){
+		TSS_actual = TSS_A;
+		tarea_actual = (unsigned short*) &sched.tareaActual_A;
+	} else {
+		TSS_actual = TSS_B;
+		tarea_actual = (unsigned short*) &sched.tareaActual_B;
+	} 
+	
 	if(hay_zoombies_activos(sched.siguiente_jugador)){
-		sig_zoombie = indice_siguiente_zoombie_activo(sched.siguiente_jugador, indice);
-
-		if(sched.hay_tareas_corriendo == FALSE){
-			res = sig_zoombie + TSS_actual;
-			sched.hay_tareas_corriendo = TRUE;
-		} 
-
-		if(*tarea_actual != sig_zoombie){
-			*tarea_actual = sig_zoombie;
-			
-		}
+		sig_zoombie = indice_siguiente_zoombie_activo(sched.siguiente_jugador, *tarea_actual);
+		*tarea_actual = sig_zoombie;
 		res = sig_zoombie + TSS_actual;
 	} 
 	cambiar_siguiente_jugador();
