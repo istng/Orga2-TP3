@@ -8,6 +8,8 @@
 #include "screen.h"
 #include "game.h"
 
+char reloj_ascii[4] = {(char)'|', (char)'/', (char)'-', (char)'\\'};
+
 void print(const char * text, unsigned int x, unsigned int y, unsigned short attr) {
     ca (*p)[VIDEO_COLS] = (ca (*)[VIDEO_COLS]) VIDEO;
     int i;
@@ -210,4 +212,14 @@ void screen_anotarPuntos(jugador jug){
 
 void screen_zombie_cadaver (unsigned int i , unsigned int j){
     print("X",j,i,0x24);
+}
+
+
+void print_reloj_zombie(jugador jug, unsigned int indice){
+	info_zombie* zombie = obtener_zombie_actual();
+	unsigned short fila_offset = jug == JUGADOR_A ? 4 : 60;
+	char reloj[2];
+	reloj[0] = reloj_ascii[zombie->contador_reloj % 4];
+	reloj[1] = 0; // caracter de terminacion
+	print(reloj, fila_offset + 2 * indice, 48, C_FG_WHITE);
 }

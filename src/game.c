@@ -35,7 +35,6 @@ void inicializar_variables_juego(){
 	A.puntos = 0;
 	A.zombie_seleccionado = &zombie_guerrero;
 
-
 	B.jug = JUGADOR_B;
 	B.pos = 20;
 	B.puntos = 0;
@@ -44,9 +43,10 @@ void inicializar_variables_juego(){
 	int i;
 	for (i = 0; i < 8; ++i){
 		zombiesA[i].estado = INACTIVO; //es decir, no hay zombie
+		zombiesA[i].contador_reloj = 0; //se inicializa el contador
 		zombiesB[i].estado = INACTIVO;
+		zombiesB[i].contador_reloj = 0;
 	}
-
 }
 
 
@@ -140,6 +140,7 @@ void game_lanzar_zombi(jugador jug) {
 	zombie->estado = ACTIVO;
 	zombie->i = info_jug->pos;
 	zombie->j = jug == JUGADOR_A ? 1 : SIZE_W;
+	zombie->contador_reloj = 0;
 
 	// Lo pintamos en el mapa
 	print_zombi(jug,zombie->i,zombie->j);
@@ -150,8 +151,6 @@ void game_lanzar_zombi(jugador jug) {
 		print_int(zombiesA[i].estado == INACTIVO ? 0 : 1, 10,i,30);
 		print_int(zombiesB[i].estado == INACTIVO ? 0 : 1, 10,i+8,30);
 	}
-
-
 }
 
 
@@ -171,7 +170,10 @@ void game_move_current_zombi(direccion dir) {
 	info_jugador* jug = jugadorAct == JUGADOR_A ? &A : &B;
 	unsigned int indice = jugadorAct == JUGADOR_A ? tarea_actual_A() : tarea_actual_B();
 	info_zombie* zombie =  jugadorAct == JUGADOR_A ? &zombiesA[indice] : &zombiesB[indice];
-	//clock_tick_zombie(jugadorAct,indice);
+	
+	// Se imprime el reloj girado una posicion
+	print_reloj_zombie(jugadorAct, indice);
+	zombie->contador_reloj++;
 
 	// los movimientos de los jugadores son opuestos
 	int orientacion = jugadorAct == JUGADOR_A ? 1 : -1;
@@ -220,12 +222,8 @@ void game_move_current_zombi(direccion dir) {
 	}
 
 
-
 	desmapear_entorno_zombie(zombie->i, zombie->j,rcr3());
 	mappear_entorno_zombi(i,j,jugadorAct,(unsigned int) rcr3());
-
-	// Printemo la pantalla (: # )
-
 
 
 	// chequeamos si se comio otra tarea
@@ -243,7 +241,7 @@ void game_move_current_zombi(direccion dir) {
 		breakpoint();
 	}
 
-
+	// Printemo la pantalla (: # )
 	print_limpiar_pos_zombi(zombie->i, zombie->j);
 
 	// chequeamos si llego al final
@@ -262,24 +260,7 @@ void game_move_current_zombi(direccion dir) {
 		zombie->j = j;
 	}
 
-
-
 }
-
-
-void clock_tick_zombie(jugador jug, unsigned int indice){
-
-	unsigned int offset;
-	switch (jug) {
-		case JUGADOR_A: offset = 4; break;
-		case JUGADOR_B: offset = 60; break;
-	}
-	tick_reloj_zombie(offset + indice*2);
-
-}
-
-
-
 
 
 unsigned int puntos(jugador jug){
@@ -334,15 +315,15 @@ unsigned short slot_libre(jugador jug){
 }
 
 
-info_zombie* obtener_arreglo_zoombies(jugador jug){
+info_zombie* obtener_arreglo_zombies(jugador jug){
 	info_zombie* zombies = jug == JUGADOR_A ? (info_zombie*) &zombiesA : (info_zombie*) &zombiesB;
 	return zombies;
 }
 
 
-unsigned int hay_zoombies_activos(jugador jug){
+unsigned int hay_zombies_activos(jugador jug){
 	unsigned int res = FALSE;
-	info_zombie *zombies = obtener_arreglo_zoombies(jug);
+	info_zombie *zombies = obtener_arreglo_zombies(jug);
 	unsigned short i;
 
 	for(i = 0; i < CANT_ZOMBIS; i++){
@@ -355,15 +336,15 @@ unsigned int hay_zoombies_activos(jugador jug){
 }
 
 
-unsigned short indice_siguiente_zoombie_activo(jugador jug, unsigned short indice){
+unsigned short indice_siguiente_zombie_activo(jugador jug, unsigned short indice){
 	// Esta función devuelve el índice en el arreglo del siguiente zoombie activo del
 	// jugador jug.
 	// En caso de alcanzar el límite del arreglo, empieza a buscar desde el principio.
 	// En caso de que haya un solo zoombie activo, devuelve el mismo índice.
-	// Esta función asume que hay_zoombies_activos devuelve TRUE
+	// Esta función asume que hay_zombies_activos devuelve TRUE
 
 	unsigned short indice_sig_zoombie_act = indice;
-	info_zombie *zombies = obtener_arreglo_zoombies(jug);
+	info_zombie *zombies = obtener_arreglo_zombies(jug);
 	unsigned short i;
 	int indice_sig_zoombie_act_encontrado = FALSE;
 
@@ -427,7 +408,7 @@ void desalojar_tarea_actual(){
 void desalojar_tarea(unsigned int indice, jugador jug){
     // El zombie que estaba corriendo se marca como INACTIVO
     // con lo cual el scheduler no lo va a poner a correr nunca más
-    info_zombie* zombies = obtener_arreglo_zoombies(jug);
+    info_zombie* zombies = obtener_arreglo_zombies(jug);
     zombies[indice].estado = INACTIVO;
 }
 

@@ -32,8 +32,8 @@ unsigned short sched_proximo_indice(){
 		tarea_actual = (unsigned short*) &sched.tareaActual_B;
 	}
 
-	if(hay_zoombies_activos(sched.siguiente_jugador)){
-		sig_zoombie = indice_siguiente_zoombie_activo(sched.siguiente_jugador, *tarea_actual);
+	if(hay_zombies_activos(sched.siguiente_jugador)){
+		sig_zoombie = indice_siguiente_zombie_activo(sched.siguiente_jugador, *tarea_actual);
 		*tarea_actual = sig_zoombie;
 		res = sig_zoombie + TSS_actual;
 	}

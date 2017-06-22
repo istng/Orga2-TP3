@@ -38,6 +38,7 @@ typedef struct info_zombie {
 	zombie_estado	estado;	//se considera ACTIVO si esta en juego e INACTIVO en caso contrario
 	unsigned short 	i;		//filas, tamaño abritrario pero suficiente
 	unsigned short 	j;		//columnas, tamaño abritrario pero suficiente
+	unsigned int	contador_reloj;	//cantidad de veces que el zombie tuvo tiempo de ejecucion
 } info_zombie;
 
 nodo_zombie zombie_guerrero;
@@ -59,9 +60,9 @@ void game_lanzar_zombi(jugador jug);
 unsigned short slot_libre(jugador jug);
 unsigned int hay_slot_libre(jugador jug);
 
-info_zombie* obtener_arreglo_zoombies(jugador jug);
-unsigned int hay_zoombies_activos(jugador jug);
-unsigned short indice_siguiente_zoombie_activo(jugador jug, unsigned short indice);
+info_zombie* obtener_arreglo_zombies(jugador jug);
+unsigned int hay_zombies_activos(jugador jug);
+unsigned short indice_siguiente_zombie_activo(jugador jug, unsigned short indice);
 
 unsigned int llego_al_final(jugador jug, info_zombie * zombie);
 unsigned int puntos(jugador jug);
