@@ -24,6 +24,12 @@ extern convert_tecla
 extern accion_tecla
 extern desalojar_tarea_actual
 
+extern rcr0
+extern rcr1
+extern rcr2
+extern rcr3
+
+
 ;; Game
 extern game_move_current_zombi
 
@@ -89,20 +95,31 @@ mensaje_tecla_len equ    $ - mensaje_tecla
 global _isr%1
 _isr%1:
     pushad
+    ;pushad
 
     imprimir_interrupcion %1
 
-    call estado_modo_debug
-    cmp eax,0
-    jz .seguir
+    ;call estado_modo_debug
+    ;cmp eax,0
+    ;jz .seguir
 
-    call print_debug_screen
+    ; aca hacemos cosas chachas para conseguir lo que queremos
+    ;call .get_eip
+    ;.get_eip:
+    ;pop eax
+    ;push eax; pusheamos el eip
+    ;call print_debug_screen
+    ;pop eax; popeamos el eip
+
+    ;jmp .fin
 
     .seguir:
     call desalojar_tarea_actual
-    call fin_intr_pic1
 
+    .fin:
+    call fin_intr_pic1
     jmp 14<<3:0 ; Tarea idle
+    ;popad
     popad
     iret
 %endmacro
@@ -189,7 +206,7 @@ _isr33:
     call accion_tecla
     pop eax
     imprimir_tecla al, 0, 79
-    call accion_tecla
+    ;call accion_tecla 
     call fin_intr_pic1
 
     popad

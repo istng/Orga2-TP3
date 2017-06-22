@@ -259,6 +259,11 @@ void print_reloj_zombie(jugador jug, unsigned int indice){
 	print(reloj, fila_offset + 2 * indice, 48, C_FG_WHITE);
 }
 
+void unprint_reloj_zombie(jugador jug, unsigned int indice){
+    unsigned short fila_offset = jug == JUGADOR_A ? 4 : 60;
+    print("X", fila_offset + 2 * indice, 48, C_FG_RED);
+}
+
 void print_debug_screen(unsigned int eip,unsigned int edi,unsigned int esi,unsigned int ebp,unsigned int esp,unsigned int ebx,unsigned int edx,unsigned int ecx,unsigned int eax){
     print_hex(eax,8,10,30,C_FG_WHITE);
     print_hex(ebx,8,12,30,C_FG_WHITE);

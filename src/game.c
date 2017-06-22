@@ -259,11 +259,9 @@ void game_move_current_zombi(direccion dir) {
 		jug->puntos += 1;
 		screen_anotarPuntos(jugadorAct);
 		screen_zombie_cadaver(zombie->i, zombie->j);
-/*		print(" ")
+		unprint_reloj_zombie(jugadorAct, indice);
+		//print("X", 48, algo, C_FG_RED);
 
-		  p[48][8].c = 88;
-  p[48][8].a = C_FG_RED;*/
-		//y desprintear el reloj
 	}
 	// si no llego al final:
 	else{

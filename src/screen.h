@@ -42,6 +42,7 @@ void print_limpiar_pos_zombi(unsigned int i,unsigned int j);
 void screen_anotarPuntos(jugador jug);
 void screen_zombie_cadaver (unsigned int i , unsigned int j);
 void print_reloj_zombie(jugador jug, unsigned int indice);
+void unprint_reloj_zombie(jugador jug, unsigned int indice);
 void print_debug_screen();
 
 #endif  /* !__SCREEN_H__ */
