@@ -286,9 +286,9 @@ unsigned int mod_mapa(unsigned int i){
 
 // Esta funcion crea el directorio y las tablas asociadas a este. Luego devuelve la direccion del directorio.
 
-unsigned int mmu_inicializar_dir_zombi(jugador jug,char tipo){
+unsigned int mmu_inicializar_dir_zombi(jugador jug,char tipo, unsigned short indice){
 	// Inicializamos un directorio para la tarea
- 	pde_entry* pd = (pde_entry*) mmu_proxima_pagina_fisica_libre();
+ 	pde_entry* pd = (pde_entry*) obtener_cr3(jug, indice);
 	identity_mapping((unsigned int)pd,1); //?????????????????????
 
 
@@ -411,3 +411,6 @@ void cerea_esta_pila(unsigned int dir){
 	
 
 }
+
+
+

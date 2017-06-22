@@ -28,6 +28,7 @@ typedef struct str_info_jugador {
 	jugador			jug;					//hay dos jugadores
 	unsigned short 	pos;					//tamaño abritrario pero suficiente, altura del mapa, <=SIZE_H
 	unsigned short 	puntos;					//tamaño abritrario pero suficiente, el primer jugador que suma 10 puntos gana
+	unsigned short 	zombies_lanzados;       // cantidad de zombies total lanzados por el jugador hasta el momento
 	nodo_zombie 	*zombie_seleccionado;	//hay 3 tipos de zombies
 } info_jugador;
 
@@ -65,6 +66,7 @@ unsigned int hay_zombies_activos(jugador jug);
 unsigned short indice_siguiente_zombie_activo(jugador jug, unsigned short indice);
 
 unsigned int llego_al_final(jugador jug, info_zombie * zombie);
+unsigned int llego_al_principio(jugador jug, info_zombie * zombie);
 unsigned int puntos(jugador jug);
 unsigned int hay_otra_tarea(unsigned int i , unsigned int j);
 jugador el_jugador_que_tiene_la_otra_tarea(unsigned int i , unsigned int j);
@@ -73,7 +75,7 @@ info_zombie* obtener_zombie_actual();
 void desalojar_tarea(unsigned int indice, jugador jug);
 void desalojar_tarea_actual();
 void game_move_current_zombi(direccion dir);
-
+unsigned int termino();
 
 // FUNCIONES DEBUG
 modo_debug estado_modo_debug();

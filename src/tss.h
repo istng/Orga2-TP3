@@ -55,6 +55,6 @@ typedef struct str_tss {
 
 void tss_inicializar();
 void tss_zombies();
-void tss_inicializar_zombi(jugador jug,unsigned int indice, unsigned int cr3);
-
+void tss_inicializar_zombi(jugador jug,unsigned int indice);
+unsigned int obtener_cr3(jugador jug, unsigned short indice);
 #endif  /* !__TSS_H__ */

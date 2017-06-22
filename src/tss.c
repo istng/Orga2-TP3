@@ -75,17 +75,17 @@ void tss_zombies(){
 		tss_zombisA[i].es     = (GDT_DATA_3<<3)|3;
 		tss_zombisA[i].gs     = (GDT_DATA_3<<3)|3;
 		tss_zombisA[i].fs     = GDT_VIDEO<<3;
-		tss_zombisA[i].cr3    = 0x09000000; // lo inicializamos con fruta
+		tss_zombisA[i].cr3    = mmu_proxima_pagina_fisica_libre();
 		tss_zombisA[i].eflags = 0x00000202;
 		tss_zombisA[i].esp0	  = mmu_proxima_pagina_fisica_libre() + PAGE_SIZE;
 
 		gdt[TSS_A+i] = gdt_entry_tss;
-	  gdt[TSS_A+i].base_0_15  = (((int)&tss_zombisA[i])<<16)>>16;
-	  gdt[TSS_A+i].base_23_16 = (((int)&tss_zombisA[i])<<8)>>24;
-  	gdt[TSS_A+i].base_31_24 = ((int)&tss_zombisA[i])>>24;
+	  	gdt[TSS_A+i].base_0_15  = (((int)&tss_zombisA[i])<<16)>>16;
+		gdt[TSS_A+i].base_23_16 = (((int)&tss_zombisA[i])<<8)>>24;
+	  	gdt[TSS_A+i].base_31_24 = ((int)&tss_zombisA[i])>>24;
 
 
-    tss_zombisB[i].eip    = 0x8000000;
+    	tss_zombisB[i].eip    = 0x8000000;
 		tss_zombisB[i].esp    = 0x8001000;
 		tss_zombisB[i].ebp    = 0x8001000;
 		tss_zombisB[i].cs     = (GDT_CODIGO_3<<3)|3;
@@ -95,18 +95,18 @@ void tss_zombies(){
 		tss_zombisB[i].es     = (GDT_DATA_3<<3)|3;
 		tss_zombisB[i].gs     = (GDT_DATA_3<<3)|3;
 		tss_zombisB[i].fs     = GDT_VIDEO<<3;
-		tss_zombisB[i].cr3    = 0x09000000; // lo inicializamos con fruta
+		tss_zombisB[i].cr3    = mmu_proxima_pagina_fisica_libre();
 		tss_zombisB[i].eflags = 0x00000202;
 		tss_zombisB[i].esp0   = mmu_proxima_pagina_fisica_libre() + PAGE_SIZE;
 
 		gdt[TSS_B+i] = gdt_entry_tss;
-	  gdt[TSS_B+i].base_0_15  = (((int)&tss_zombisB[i])<<16)>>16;
-	  gdt[TSS_B+i].base_23_16 = (((int)&tss_zombisB[i])<<8)>>24;
-  	gdt[TSS_B+i].base_31_24 = ((int)&tss_zombisB[i])>>24;
+	  	gdt[TSS_B+i].base_0_15  = (((int)&tss_zombisB[i])<<16)>>16;
+	  	gdt[TSS_B+i].base_23_16 = (((int)&tss_zombisB[i])<<8)>>24;
+  		gdt[TSS_B+i].base_31_24 = ((int)&tss_zombisB[i])>>24;
 	}
 }
 
-void tss_inicializar_zombi(jugador jug,unsigned int indice, unsigned int cr3){
+void tss_inicializar_zombi(jugador jug,unsigned int indice){
 
 	switch (jug) {
 		case JUGADOR_A:
@@ -120,7 +120,6 @@ void tss_inicializar_zombi(jugador jug,unsigned int indice, unsigned int cr3){
 		tss_zombisA[indice].es     = (GDT_DATA_3<<3)|3;
 		tss_zombisA[indice].gs     = (GDT_DATA_3<<3)|3;
 		tss_zombisA[indice].fs     = GDT_VIDEO<<3;
-		tss_zombisA[indice].cr3    = cr3; // lo inicializamos con fruta
 		tss_zombisA[indice].eflags = 0x00000202;
 		//tss_zombisA[indice].esp0	  = mmu_proxima_pagina_fisica_libre() + PAGE_SIZE;
 		cerea_esta_pila(tss_zombisA[indice].esp0);
@@ -136,11 +135,16 @@ void tss_inicializar_zombi(jugador jug,unsigned int indice, unsigned int cr3){
 		tss_zombisB[indice].es     = (GDT_DATA_3<<3)|3;
 		tss_zombisB[indice].gs     = (GDT_DATA_3<<3)|3;
 		tss_zombisB[indice].fs     = GDT_VIDEO<<3;
-		tss_zombisB[indice].cr3    = cr3; // lo inicializamos con fruta
 		tss_zombisB[indice].eflags = 0x00000202;
 		//tss_zombisB[indice].esp0   = mmu_proxima_pagina_fisica_libre() + PAGE_SIZE;
 		cerea_esta_pila(tss_zombisB[indice].esp0);
 			break;
 	}
 
+}
+
+
+unsigned int obtener_cr3(jugador jug, unsigned short indice){
+	unsigned int cr3 = jug == JUGADOR_A ? tss_zombisA[indice].cr3 : tss_zombisB[indice].cr3;
+	return cr3;
 }

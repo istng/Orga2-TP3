@@ -14,7 +14,7 @@ sched_tarea_selector:   dw 0x00
 
 ;; PIC
 extern fin_intr_pic1
-
+extern deshabilitar_pic
 
 ;; Sched
 extern sched_proximo_indice
@@ -39,6 +39,8 @@ extern swicth_modo_debug
 extern switch_hay_interrupcion
 extern volver_al_juego
 extern print_debug_screen
+
+extern termino
 
 ;;
 ;; Definición de MACROS
@@ -167,6 +169,9 @@ _isr32:
     pushad
 
     call proximo_reloj
+    call termino
+    cmp ax,1
+    je .termino
 
     call hay_interrupcion
     cmp ax,1;
@@ -188,6 +193,13 @@ _isr32:
 
     .nojump:
         call fin_intr_pic1
+        jmp .end
+
+    .termino:
+    call deshabilitar_pic
+    .loopear:
+    jmp .loopear
+
 
     .end:
     popad

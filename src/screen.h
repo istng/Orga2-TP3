@@ -35,7 +35,7 @@ void print_jugador(jugador jug);
 
 void print_limpiar_pos_jugador(jugador jug);
 
-void print_zombi(jugador jug, unsigned int i, unsigned int j);
+void print_zombi(jugador jug, unsigned int indice, unsigned int i, unsigned int j);
 
 void print_limpiar_pos_zombi(unsigned int i,unsigned int j);
 

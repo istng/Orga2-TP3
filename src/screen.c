@@ -218,15 +218,32 @@ void print_limpiar_pos_jugador(jugador jug){
 	}
 }
 
-void print_zombi(jugador jug, unsigned int i, unsigned int j){
+void print_zombi(jugador jug, unsigned int indice, unsigned int i, unsigned int j){
+  char zombie_ascii[2];
+  zombie_ascii[1] = 0; // caracter terminacion
+
+  zombie_tipo tipo = jug == JUGADOR_A ? zombiesA[indice].tipo : zombiesB[indice].tipo;
+
+  switch (tipo) {
+    case GUERRERO:
+      zombie_ascii[0] = 'G';
+      break;
+    case CLERIGO:
+      zombie_ascii[0] = 'C';
+      break;
+    case MAGO:
+      zombie_ascii[0] = 'M';
+      break;
+  }
+
   switch(jug){
-		case JUGADOR_A:
-			print(&(A.zombie_seleccionado->ascii), j, i, C_FG_LIGHT_RED);
-			break;
-		case JUGADOR_B:
-			print(&(B.zombie_seleccionado->ascii), j, i, C_FG_LIGHT_BLUE);
-			break;
-	}
+    case JUGADOR_A:
+      print(zombie_ascii, j, i, C_FG_LIGHT_RED);
+      break;
+    case JUGADOR_B:
+      print(zombie_ascii, j, i, C_FG_LIGHT_BLUE);
+      break;
+  } 
 }
 
 void print_limpiar_pos_zombi(unsigned int i,unsigned int j){

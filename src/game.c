@@ -36,11 +36,13 @@ void inicializar_variables_juego(){
 	A.jug = JUGADOR_A;
 	A.pos = 20;
 	A.puntos = 0;
+	A.zombies_lanzados = 0;
 	A.zombie_seleccionado = &zombie_guerrero;
 
 	B.jug = JUGADOR_B;
 	B.pos = 20;
 	B.puntos = 0;
+	B.zombies_lanzados = 0;
 	B.zombie_seleccionado = &zombie_mago;
 
 	// seteamos modo debug
@@ -126,10 +128,10 @@ void game_lanzar_zombi(jugador jug) {
 	char tipoZombie = info_jug->zombie_seleccionado->ascii;
 
 	// inicializamos el directorio de zombie y copiamos su codigo
-	unsigned int dir_pd  = mmu_inicializar_dir_zombi(jug,tipoZombie);
+	mmu_inicializar_dir_zombi(jug, tipoZombie, indiceZombie);
 
 
-	tss_inicializar_zombi(jug, indiceZombie, dir_pd);
+	tss_inicializar_zombi(jug, indiceZombie);
 
 	// inicializamos el zombie y lo marcamos como activo
 	switch (tipoZombie) {
@@ -151,14 +153,11 @@ void game_lanzar_zombi(jugador jug) {
 	zombie->contador_reloj = 0;
 
 	// Lo pintamos en el mapa
-	print_zombi(jug,zombie->i,zombie->j);
+	print_zombi(jug, indiceZombie,zombie->i,zombie->j);
+
+	info_jug->zombies_lanzados += 1;
 
 
-	int i;
-	for (i = 0; i < 8; ++i){
-		print_int(zombiesA[i].estado == INACTIVO ? 0 : 1, 10,i,30);
-		print_int(zombiesB[i].estado == INACTIVO ? 0 : 1, 10,i+8,30);
-	}
 }
 
 
@@ -237,35 +236,27 @@ void game_move_current_zombi(direccion dir) {
 	// chequeamos si se comio otra tarea
 
 	if(hay_otra_tarea(i,j)){
-		breakpoint();
+
 		jugador el_de_la_otra_tarea = el_jugador_que_tiene_la_otra_tarea(i,j);
 		unsigned int tarea = la_otra_tarea(i,j);
 		desalojar_tarea(tarea, el_de_la_otra_tarea);
-		int i;
-		for (i = 0; i < 8; ++i){
-			print_int(zombiesA[i].estado == INACTIVO ? 0 : 1, 10,i,30);
-			print_int(zombiesB[i].estado == INACTIVO ? 0 : 1, 10,i+8,30);
-		}
-		breakpoint();
 	}
 
 	// Printemo la pantalla (: # )
 	print_limpiar_pos_zombi(zombie->i, zombie->j);
 
 	// chequeamos si llego al final
-	if (llego_al_final(jugadorAct,zombie)){
+	if (llego_al_final(jugadorAct,zombie) || llego_al_principio(jugadorAct,zombie)){
 
 		desalojar_tarea_actual();
-		jug->puntos += 1;
-		screen_anotarPuntos(jugadorAct);
+		if(llego_al_final(jugadorAct,zombie)) { jug->puntos += 1; screen_anotarPuntos(jugadorAct); }
 		screen_zombie_cadaver(zombie->i, zombie->j);
 		unprint_reloj_zombie(jugadorAct, indice);
-		//print("X", 48, algo, C_FG_RED);
 
 	}
 	// si no llego al final:
 	else{
-		print_zombi(jugadorAct,i,j);
+		print_zombi(jugadorAct, indice,i,j);
 		// Actualizos posicion zombi
 		zombie->i = mod_mapa(i);
 		zombie->j = j;
@@ -291,6 +282,15 @@ unsigned int llego_al_final(jugador jug, info_zombie * zombie){
 	}
 	return res;
 }
+unsigned int llego_al_principio(jugador jug, info_zombie * zombie){
+	unsigned int res = 0;
+	switch (zombie->jug) {
+		case JUGADOR_A: res = (zombie->j == 1 && zombie->contador_reloj > 1); break;
+		case JUGADOR_B: res = (zombie->j == SIZE_W && zombie->contador_reloj > 1); break;
+	}
+	return res;
+}
+
 
 
 
@@ -459,4 +459,52 @@ void switch_hay_interrupcion(){
 
 void volver_al_juego(){
 	// TODO: poner la pantalla como estaba antes y volver a la tarea idle
+}
+
+
+unsigned int termino(){
+	unsigned int res = 0;
+	
+	//si se llego al maximo de zombies (20 para cada jugador)
+	if(A.zombies_lanzados == 21 || B.zombies_lanzados == 21){
+		if(A.puntos > B.puntos) {
+			print("Se llego a 20 zombies. Gano A",25,25,C_FG_LIGHT_RED);
+		} else if(A.puntos < B.puntos) {
+			print("Se llego a 20 zombies. Gano B",25,25,C_FG_LIGHT_BLUE);
+		} else {
+			print("Se llego a 20 zombies. Empate.",24,25,C_FG_WHITE);
+		}
+		res = 1;
+	}
+
+	//si se llego al maximo de puntos (10), y gano un jugador
+	if(A.puntos == 10) {
+		print("Gano A",37,25,C_FG_LIGHT_RED);
+		res = 1;
+	} else if(B.puntos == 10) {
+		print("Gano B",37,25,C_FG_LIGHT_BLUE);
+		res = 1;
+	}
+
+
+	//si las 16 tareas están activas y llegan a 2000 o mas
+	unsigned int i;
+	unsigned int cuenta = 0;
+	for (i = 0 ; i<8 ;i++){
+		cuenta = zombiesA[i].contador_reloj > 256 ? cuenta+1 : cuenta;
+		cuenta = zombiesB[i].contador_reloj > 256 ? cuenta+1 : cuenta;
+	}
+	if(cuenta == 16){
+		if(A.puntos > B.puntos) {
+			print("Se termino el tiempo. Gano A",25,25,C_FG_LIGHT_RED);
+		} else if(A.puntos < B.puntos) {
+			print("Se termino el tiempo. Gano B",25,25,C_FG_LIGHT_BLUE);
+		} else {
+			print("Se termino el tiempo. Empate.",24,25,C_FG_WHITE);
+		}
+		res = 1;
+	}
+
+	return res;
+
 }
