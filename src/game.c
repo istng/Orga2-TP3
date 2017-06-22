@@ -259,6 +259,11 @@ void game_move_current_zombi(direccion dir) {
 		jug->puntos += 1;
 		screen_anotarPuntos(jugadorAct);
 		screen_zombie_cadaver(zombie->i, zombie->j);
+/*		print(" ")
+
+		  p[48][8].c = 88;
+  p[48][8].a = C_FG_RED;*/
+		//y desprintear el reloj
 	}
 	// si no llego al final:
 	else{
@@ -443,8 +448,14 @@ void swicth_modo_debug(){
 
 void switch_hay_interrupcion(){
 	switch (hay_interrupcion_en_pantalla) {
-		case TRUE: hay_interrupcion_en_pantalla = FALSE; break;
-		case FALSE: hay_interrupcion_en_pantalla = TRUE; break;
+		case TRUE:
+			hay_interrupcion_en_pantalla = FALSE; 
+			print("MODO DEBUG ACTIVADO",1,0,C_FG_WHITE); 
+			break;
+		case FALSE: 
+			hay_interrupcion_en_pantalla = TRUE;
+			print("MODO DEBUG DESACTIVADO",1,0,C_FG_WHITE);
+			break;
 	}
 }
 

@@ -259,6 +259,14 @@ void print_reloj_zombie(jugador jug, unsigned int indice){
 	print(reloj, fila_offset + 2 * indice, 48, C_FG_WHITE);
 }
 
-void print_debug_screen(){
-  // TODO: mostrar en pantalla el estado de la tarea antes de aparecer la interrupcion
+void print_debug_screen(unsigned int eip,unsigned int edi,unsigned int esi,unsigned int ebp,unsigned int esp,unsigned int ebx,unsigned int edx,unsigned int ecx,unsigned int eax){
+    print_hex(eax,8,10,30,C_FG_WHITE);
+    print_hex(ebx,8,12,30,C_FG_WHITE);
+    print_hex(ecx,8,14,30,C_FG_WHITE);
+    print_hex(edx,8,16,30,C_FG_WHITE);
+    print_hex(esi,8,18,30,C_FG_WHITE);
+    print_hex(edi,8,20,30,C_FG_WHITE);
+    print_hex(ebp,8,22,30,C_FG_WHITE);
+    print_hex(esp,8,24,30,C_FG_WHITE);
+    print_hex(eip,8,26,30,C_FG_WHITE);
 }

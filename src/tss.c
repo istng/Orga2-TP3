@@ -122,7 +122,8 @@ void tss_inicializar_zombi(jugador jug,unsigned int indice, unsigned int cr3){
 		tss_zombisA[indice].fs     = GDT_VIDEO<<3;
 		tss_zombisA[indice].cr3    = cr3; // lo inicializamos con fruta
 		tss_zombisA[indice].eflags = 0x00000202;
-		tss_zombisA[indice].esp0	  = mmu_proxima_pagina_fisica_libre() + PAGE_SIZE;
+		//tss_zombisA[indice].esp0	  = mmu_proxima_pagina_fisica_libre() + PAGE_SIZE;
+		cerea_esta_pila(tss_zombisA[indice].esp0);
 			break;
 		case JUGADOR_B:
 		tss_zombisB[indice].eip    = 0x8000000;
@@ -137,7 +138,8 @@ void tss_inicializar_zombi(jugador jug,unsigned int indice, unsigned int cr3){
 		tss_zombisB[indice].fs     = GDT_VIDEO<<3;
 		tss_zombisB[indice].cr3    = cr3; // lo inicializamos con fruta
 		tss_zombisB[indice].eflags = 0x00000202;
-		tss_zombisB[indice].esp0   = mmu_proxima_pagina_fisica_libre() + PAGE_SIZE;
+		//tss_zombisB[indice].esp0   = mmu_proxima_pagina_fisica_libre() + PAGE_SIZE;
+		cerea_esta_pila(tss_zombisB[indice].esp0);
 			break;
 	}
 

@@ -193,6 +193,7 @@ void accion_tecla(char scan_code){
             break;
         case 'y':
             switch (hay_pantalla_debug) {
+                breakpoint();
               case TRUE:
                 volver_al_juego();
               case FALSE:

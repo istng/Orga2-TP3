@@ -395,3 +395,19 @@ void copiar_codigo_zombi(unsigned int i , unsigned int j, jugador jug, zombie_ti
 
 
 }
+
+
+void cerea_esta_pila(unsigned int dir){
+	char* pagina = (char*) ((dir>>4)<<4);
+
+	if((unsigned int)pagina != dir){
+		mmu_mappear_pagina((unsigned int)pagina,rcr3(),dir,1);
+		unsigned int k;
+		for (k=0;k<PAGE_SIZE;k++){
+			pagina[k] = 0;
+		}
+		mmu_unmapear_pagina((unsigned int)pagina,rcr3());
+	}
+	
+
+}
