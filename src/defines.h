@@ -64,6 +64,7 @@ typedef enum jugador_direccion_e { ARRIBA, ABAJO } jugador_direccion;
 typedef enum jugador_zombie_lista_e { ANTERIOR, SIGUIENTE } jugador_zombie_lista;
 typedef enum zombie_tipo_e { GUERRERO, MAGO, CLERIGO } zombie_tipo;
 typedef enum zombie_estado_e { ACTIVO, INACTIVO } zombie_estado;
+typedef enum modo_debug_e { ACTIVADO = 0x0001 , DESACTIVADO = 0x0000 } modo_debug;
 
 
 #endif  /* !__DEFINES_H__ */

@@ -120,38 +120,73 @@ void print_screen(){
 	//agregamos los numeros
 	p[46][4].c = 49;
 	p[46][4].a = C_FG_WHITE;
+  p[48][4].c = 88;
+  p[48][4].a = C_FG_RED;
 	p[46][6].c = 50;
 	p[46][6].a = C_FG_WHITE;
+  p[48][6].c = 88;
+  p[48][6].a = C_FG_RED;
 	p[46][8].c = 51;
 	p[46][8].a = C_FG_WHITE;
+  p[48][8].c = 88;
+  p[48][8].a = C_FG_RED;
 	p[46][10].c = 52;
 	p[46][10].a = C_FG_WHITE;
+  p[48][10].c = 88;
+  p[48][10].a = C_FG_RED;
 	p[46][12].c = 53;
 	p[46][12].a = C_FG_WHITE;
+  p[48][12].c = 88;
+  p[48][12].a = C_FG_RED;
 	p[46][14].c = 54;
 	p[46][14].a = C_FG_WHITE;
+  p[48][14].c = 88;
+  p[48][14].a = C_FG_RED;
 	p[46][16].c = 55;
 	p[46][16].a = C_FG_WHITE;
+  p[48][16].c = 88;
+  p[48][16].a = C_FG_RED;
 	p[46][18].c = 56;
 	p[46][18].a = C_FG_WHITE;
+  p[48][18].c = 88;
+  p[48][18].a = C_FG_RED;
 
 	p[46][74].c = 56;
 	p[46][74].a = C_FG_WHITE;
+  p[48][74].c = 88;
+  p[48][74].a = C_FG_RED;
 	p[46][72].c = 55;
 	p[46][72].a = C_FG_WHITE;
+  p[48][72].c = 88;
+  p[48][72].a = C_FG_RED;
 	p[46][70].c = 54;
 	p[46][70].a = C_FG_WHITE;
+  p[48][70].c = 88;
+  p[48][70].a = C_FG_RED;
 	p[46][68].c = 53;
 	p[46][68].a = C_FG_WHITE;
+  p[48][68].c = 88;
+  p[48][68].a = C_FG_RED;
 	p[46][66].c = 52;
 	p[46][66].a = C_FG_WHITE;
+  p[48][66].c = 88;
+  p[48][66].a = C_FG_RED;
 	p[46][64].c = 51;
 	p[46][64].a = C_FG_WHITE;
+  p[48][64].c = 88;
+  p[48][64].a = C_FG_RED;
 	p[46][62].c = 50;
 	p[46][62].a = C_FG_WHITE;
+  p[48][62].c = 88;
+  p[48][62].a = C_FG_RED;
 	p[46][60].c = 49;
 	p[46][60].a = C_FG_WHITE;
+  p[48][60].c = 88;
+  p[48][60].a = C_FG_RED;
 
+  //puntos
+  print_int(0,36,47,0x4F);
+  print_int(0,41,47,0x1F);
 
 	// Agregamos los jugadores
 	print_jugador(JUGADOR_A);
@@ -222,4 +257,8 @@ void print_reloj_zombie(jugador jug, unsigned int indice){
 	reloj[0] = reloj_ascii[zombie->contador_reloj % 4];
 	reloj[1] = 0; // caracter de terminacion
 	print(reloj, fila_offset + 2 * indice, 48, C_FG_WHITE);
+}
+
+void print_debug_screen(){
+  // TODO: mostrar en pantalla el estado de la tarea antes de aparecer la interrupcion
 }

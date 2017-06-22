@@ -9,11 +9,14 @@
 #include "sched.h"
 #include "idt.h"
 #include "isr.h"
+#include "defines.h"
 
 info_jugador A;
 info_jugador B;
 info_zombie zombiesA[CANT_ZOMBIS];
 info_zombie zombiesB[CANT_ZOMBIS];
+modo_debug estado_debug;
+unsigned int hay_interrupcion_en_pantalla;
 
 nodo_zombie zombie_guerrero = { (zombie_tipo) GUERRERO,
 								(char) 'G',
@@ -39,6 +42,11 @@ void inicializar_variables_juego(){
 	B.pos = 20;
 	B.puntos = 0;
 	B.zombie_seleccionado = &zombie_mago;
+
+	// seteamos modo debug
+	estado_debug = INACTIVO;
+	hay_interrupcion_en_pantalla = FALSE;
+
 
 	int i;
 	for (i = 0; i < 8; ++i){
@@ -170,7 +178,7 @@ void game_move_current_zombi(direccion dir) {
 	info_jugador* jug = jugadorAct == JUGADOR_A ? &A : &B;
 	unsigned int indice = jugadorAct == JUGADOR_A ? tarea_actual_A() : tarea_actual_B();
 	info_zombie* zombie =  jugadorAct == JUGADOR_A ? &zombiesA[indice] : &zombiesB[indice];
-	
+
 	// Se imprime el reloj girado una posicion
 	print_reloj_zombie(jugadorAct, indice);
 	zombie->contador_reloj++;
@@ -417,4 +425,29 @@ void desalojar_tarea(unsigned int indice, jugador jug){
 info_zombie* obtener_zombie_actual(){
 	info_zombie* zombie =  jugadorActual() == JUGADOR_A ? &zombiesA[tarea_actual_A()] : &zombiesB[tarea_actual_B()];
     return zombie;
+}
+
+
+
+modo_debug estado_modo_debug(){
+	return estado_debug;
+}
+
+unsigned int hay_interrupcion(){
+	return hay_interrupcion_en_pantalla;
+}
+
+void swicth_modo_debug(){
+	estado_debug = ACTIVADO;
+}
+
+void switch_hay_interrupcion(){
+	switch (hay_interrupcion_en_pantalla) {
+		case TRUE: hay_interrupcion_en_pantalla = FALSE; break;
+		case FALSE: hay_interrupcion_en_pantalla = TRUE; break;
+	}
+}
+
+void volver_al_juego(){
+	// TODO: poner la pantalla como estaba antes y volver a la tarea idle
 }

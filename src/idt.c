@@ -113,6 +113,9 @@ char convert_tecla(char scan_code) {
         case 0x36:
             ascii = '>';   //right shift
             break;
+        case 0x15:
+            ascii = 'y';
+            break;
     }
     return ascii;
 }
@@ -120,52 +123,82 @@ char convert_tecla(char scan_code) {
 
 void accion_tecla(char scan_code){
     char tecla = convert_tecla(scan_code);
+    unsigned int hay_pantalla_debug = hay_interrupcion();
     switch(tecla){
         case 'W':
-            print_limpiar_pos_jugador(JUGADOR_A);
-            game_jugador_mover(JUGADOR_A, ARRIBA);
-            print_jugador(JUGADOR_A);
+            if(!hay_pantalla_debug){
+              print_limpiar_pos_jugador(JUGADOR_A);
+              game_jugador_mover(JUGADOR_A, ARRIBA);
+              print_jugador(JUGADOR_A);
+            }
             break;
         case 'A':
+            if(!hay_pantalla_debug){
             game_jugador_cambiar_zombie(JUGADOR_A, ANTERIOR);
             print_jugador(JUGADOR_A);
+            }
             break;
         case 'S':
+            if(!hay_pantalla_debug){
             print_limpiar_pos_jugador(JUGADOR_A);
             game_jugador_mover(JUGADOR_A, ABAJO);
             print_jugador(JUGADOR_A);
+            }
             break;
         case 'D':
+            if(!hay_pantalla_debug){
             game_jugador_cambiar_zombie(JUGADOR_A, SIGUIENTE);
             print_jugador(JUGADOR_A);
+            }
             break;
         case '<':
-            if (hay_slot_libre(JUGADOR_A)) {
-              game_lanzar_zombi(JUGADOR_A);
+            if(!hay_pantalla_debug){
+              if (hay_slot_libre(JUGADOR_A)) {
+                game_lanzar_zombi(JUGADOR_A);
+              }
             }
             break;
         case 'I':
-            print_limpiar_pos_jugador(JUGADOR_B);
-            game_jugador_mover(JUGADOR_B, ARRIBA);
-            print_jugador(JUGADOR_B);
-            break;
-        case 'J':
-            game_jugador_cambiar_zombie(JUGADOR_B, ANTERIOR);
-            print_jugador(JUGADOR_B);
-            break;
-        case 'K':
-            print_limpiar_pos_jugador(JUGADOR_B);
-            game_jugador_mover(JUGADOR_B, ABAJO);
-            print_jugador(JUGADOR_B);
-            break;
-        case 'L':
-            game_jugador_cambiar_zombie(JUGADOR_B, SIGUIENTE);
-            print_jugador(JUGADOR_B);
-            break;
-        case '>':
-            if (hay_slot_libre(JUGADOR_B)){
-                game_lanzar_zombi(JUGADOR_B);
+            if(!hay_pantalla_debug){
+              print_limpiar_pos_jugador(JUGADOR_B);
+              game_jugador_mover(JUGADOR_B, ARRIBA);
+              print_jugador(JUGADOR_B);
             }
             break;
+        case 'J':
+            if(!hay_pantalla_debug){
+              game_jugador_cambiar_zombie(JUGADOR_B, ANTERIOR);
+              print_jugador(JUGADOR_B);
+            }
+            break;
+        case 'K':
+            if(!hay_pantalla_debug){
+              print_limpiar_pos_jugador(JUGADOR_B);
+              game_jugador_mover(JUGADOR_B, ABAJO);
+              print_jugador(JUGADOR_B);
+            }
+            break;
+        case 'L':
+            if(!hay_pantalla_debug){
+              game_jugador_cambiar_zombie(JUGADOR_B, SIGUIENTE);
+              print_jugador(JUGADOR_B);
+            }
+            break;
+        case '>':
+            if(!hay_pantalla_debug){
+              if (hay_slot_libre(JUGADOR_B)){
+                  game_lanzar_zombi(JUGADOR_B);
+              }
+            }
+            break;
+        case 'y':
+            switch (hay_pantalla_debug) {
+              case TRUE:
+                volver_al_juego();
+              case FALSE:
+                swicth_modo_debug();
+            }
+            break;
+
     }
 }

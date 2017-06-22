@@ -72,8 +72,13 @@ unsigned int la_otra_tarea(unsigned int i , unsigned int j);
 info_zombie* obtener_zombie_actual();
 void desalojar_tarea(unsigned int indice, jugador jug);
 void desalojar_tarea_actual();
-
 void game_move_current_zombi(direccion dir);
 
 
+// FUNCIONES DEBUG
+modo_debug estado_modo_debug();
+unsigned int  hay_interrupcion();
+void swicth_modo_debug();
+void switch_hay_interrupcion();
+void volver_al_juego();
 #endif  /* !__GAME_H__ */

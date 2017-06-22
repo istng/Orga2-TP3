@@ -11,6 +11,7 @@ BITS 32
 sched_tarea_offset:     dd 0x00
 sched_tarea_selector:   dw 0x00
 
+
 ;; PIC
 extern fin_intr_pic1
 
@@ -26,7 +27,12 @@ extern desalojar_tarea_actual
 ;; Game
 extern game_move_current_zombi
 
-
+extern estado_modo_debug
+extern hay_interrupcion
+extern swicth_modo_debug
+extern switch_hay_interrupcion
+extern volver_al_juego
+extern print_debug_screen
 
 ;;
 ;; Definición de MACROS
@@ -85,7 +91,16 @@ _isr%1:
     pushad
 
     imprimir_interrupcion %1
+
+    call estado_modo_debug
+    cmp eax,0
+    jz .seguir
+
+    call print_debug_screen
+
+    .seguir:
     call desalojar_tarea_actual
+    call fin_intr_pic1
 
     jmp 14<<3:0 ; Tarea idle
     popad
@@ -135,11 +150,15 @@ _isr32:
     pushad
 
     call proximo_reloj
+
+    call hay_interrupcion
+    cmp ax,1;
+    je .nojump
+
+
     call sched_proximo_indice
-    ;xchg bx,bx ; Breakpoint isr32
     cmp ax, 0
     je  .nojump
-
 
     shl ax, 3
     mov [sched_tarea_selector], ax
@@ -182,16 +201,13 @@ _isr33:
 global _isr0x66
 _isr0x66:
 
-    ;xchg bx,bx
     pushad
 
     push eax
     call game_move_current_zombi
     call fin_intr_pic1
     pop eax
-    ;xchg bx,bx
     jmp 14<<3:0
-    ;xchg bx,bx
 
     popad
     iret
