@@ -192,12 +192,15 @@ void accion_tecla(char scan_code){
             }
             break;
         case 'y':
-            switch (hay_pantalla_debug) {
-                breakpoint();
+            switch(hay_pantalla_debug) {
               case TRUE:
-                volver_al_juego();
+                screen_cargar();
+                swicth_modo_debug();
+                hay_pantalla_debug = FALSE;
+                break;
               case FALSE:
                 swicth_modo_debug();
+                break;
             }
             break;
 

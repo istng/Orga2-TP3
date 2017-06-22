@@ -10,6 +10,8 @@
 
 char reloj_ascii[4] = {(char)'|', (char)'/', (char)'-', (char)'\\'};
 
+char pantalla[VIDEO_FILS*VIDEO_COLS*2]; 
+
 void print(const char * text, unsigned int x, unsigned int y, unsigned short attr) {
     ca (*p)[VIDEO_COLS] = (ca (*)[VIDEO_COLS]) VIDEO;
     int i;
@@ -191,6 +193,13 @@ void print_screen(){
 	// Agregamos los jugadores
 	print_jugador(JUGADOR_A);
 	print_jugador(JUGADOR_B);
+
+    //los zombies restantes para lanzar
+    print_int(20,31,47,0x4F);
+    print_int(20,49,47,0x1F);
+
+    //EL NOMBRE DEL GRUPO
+    print("Juab's Group @(())>-", 30, 0, C_FG_WHITE);
 }
 
 
@@ -281,7 +290,9 @@ void unprint_reloj_zombie(jugador jug, unsigned int indice){
     print("X", fila_offset + 2 * indice, 48, C_FG_RED);
 }
 
-void print_debug_screen(unsigned int eip,unsigned int edi,unsigned int esi,unsigned int ebp,unsigned int esp,unsigned int ebx,unsigned int edx,unsigned int ecx,unsigned int eax){
+void print_debug_screen(unsigned int edi,unsigned int esi,unsigned int ebp,unsigned int esteNo,unsigned int ebx,   \
+    unsigned int edx,unsigned int ecx,unsigned int eax,unsigned int ss,unsigned int esp, unsigned int eflags,   \
+    unsigned int cs,unsigned int eip, unsigned int error_code){
     print_hex(eax,8,10,30,C_FG_WHITE);
     print_hex(ebx,8,12,30,C_FG_WHITE);
     print_hex(ecx,8,14,30,C_FG_WHITE);
@@ -291,4 +302,21 @@ void print_debug_screen(unsigned int eip,unsigned int edi,unsigned int esi,unsig
     print_hex(ebp,8,22,30,C_FG_WHITE);
     print_hex(esp,8,24,30,C_FG_WHITE);
     print_hex(eip,8,26,30,C_FG_WHITE);
+}
+
+
+void screen_guardar(){
+    char * screen = (char*)VIDEO;
+    unsigned int i;
+    for (i = 0; i < VIDEO_FILS*VIDEO_COLS*2; i++){
+        pantalla[i] = screen[i];
+    }
+}
+
+void screen_cargar(){
+    char * screen = (char*)VIDEO;
+    unsigned int i;
+    for (i = 0; i < VIDEO_FILS*VIDEO_COLS*2; i++){
+        screen[i] = pantalla[i];
+    }
 }

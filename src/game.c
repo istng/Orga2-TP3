@@ -46,7 +46,7 @@ void inicializar_variables_juego(){
 	B.zombie_seleccionado = &zombie_mago;
 
 	// seteamos modo debug
-	estado_debug = INACTIVO;
+	estado_debug = DESACTIVADO;
 	hay_interrupcion_en_pantalla = FALSE;
 
 
@@ -157,6 +157,12 @@ void game_lanzar_zombi(jugador jug) {
 
 	info_jug->zombies_lanzados += 1;
 
+	unsigned short columna_offset = jug == JUGADOR_A ? 31 : 49;//47
+	unsigned short color = jug == JUGADOR_A ? 0x4F : 0x1F;
+	print_int(20 - info_jug->zombies_lanzados,columna_offset,47,color);
+	if(20 - info_jug->zombies_lanzados < 10) {
+		print_int(0,columna_offset-1,47,color);
+	}
 
 }
 
@@ -441,25 +447,32 @@ unsigned int hay_interrupcion(){
 }
 
 void swicth_modo_debug(){
-	estado_debug = ACTIVADO;
+	switch (estado_debug) {
+		case DESACTIVADO:
+			estado_debug = ACTIVADO;
+			print("activado",0,1,30); 
+			break;
+		case ACTIVADO: 
+			estado_debug = DESACTIVADO;
+			print("desactivado",0,1,30);
+			break;
+	}
 }
 
 void switch_hay_interrupcion(){
 	switch (hay_interrupcion_en_pantalla) {
 		case TRUE:
-			hay_interrupcion_en_pantalla = FALSE; 
-			print("MODO DEBUG ACTIVADO",1,0,C_FG_WHITE); 
+			hay_interrupcion_en_pantalla = FALSE;
+			print("hay una interrupcion",1,1,30);  
 			break;
 		case FALSE: 
 			hay_interrupcion_en_pantalla = TRUE;
-			print("MODO DEBUG DESACTIVADO",1,0,C_FG_WHITE);
+			print("no hay una interrupcion",1,1,30);
 			break;
 	}
 }
 
-void volver_al_juego(){
-	// TODO: poner la pantalla como estaba antes y volver a la tarea idle
-}
+
 
 
 unsigned int termino(){

@@ -82,5 +82,4 @@ modo_debug estado_modo_debug();
 unsigned int  hay_interrupcion();
 void swicth_modo_debug();
 void switch_hay_interrupcion();
-void volver_al_juego();
 #endif  /* !__GAME_H__ */

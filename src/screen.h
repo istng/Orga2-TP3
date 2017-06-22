@@ -44,5 +44,10 @@ void screen_zombie_cadaver (unsigned int i , unsigned int j);
 void print_reloj_zombie(jugador jug, unsigned int indice);
 void unprint_reloj_zombie(jugador jug, unsigned int indice);
 void print_debug_screen();
+void print_debug_screen(unsigned int edi,unsigned int esi,unsigned int ebp,unsigned int esteNo,unsigned int ebx,   \
+    unsigned int edx,unsigned int ecx,unsigned int eax,unsigned int ss,unsigned int esp, unsigned int eflags,   \
+    unsigned int cs,unsigned int eip, unsigned int error_code);
+void screen_guardar();
+void screen_cargar();
 
 #endif  /* !__SCREEN_H__ */

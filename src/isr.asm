@@ -39,6 +39,7 @@ extern swicth_modo_debug
 extern switch_hay_interrupcion
 extern volver_al_juego
 extern print_debug_screen
+extern screen_guardar
 
 extern termino
 
@@ -101,19 +102,14 @@ _isr%1:
 
     imprimir_interrupcion %1
 
-    ;call estado_modo_debug
-    ;cmp eax,0
-    ;jz .seguir
+    call estado_modo_debug
+    cmp eax,0
+    je .seguir
 
-    ; aca hacemos cosas chachas para conseguir lo que queremos
-    ;call .get_eip
-    ;.get_eip:
-    ;pop eax
-    ;push eax; pusheamos el eip
-    ;call print_debug_screen
-    ;pop eax; popeamos el eip
-
-    ;jmp .fin
+    call switch_hay_interrupcion
+    call print_debug_screen
+    call screen_guardar
+    jmp .fin
 
     .seguir:
     call desalojar_tarea_actual

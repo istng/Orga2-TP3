@@ -16,7 +16,7 @@ void task() {
     for(i=0;i<10;i++) {
     syscall_mover(ADE); //breakpoint();
     }
-tarea_mago_a:
+//tarea_mago_a:
     for(i=0;i<1;i++) {
     syscall_mover(DER); //breakpoint();
     }
@@ -29,8 +29,8 @@ tarea_mago_a:
     //for(i=0;i<1;i++) {
     //syscall_mover(ADE); //breakpoint();
     //}
-    goto tarea_mago_a;
+//    goto tarea_mago_a;
 
 
-   while(1) { __asm __volatile("mov $2, %%eax":::"eax"); }
+  // while(1) { __asm __volatile("mov $2, %%eax":::"eax"); }
 }
