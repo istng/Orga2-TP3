@@ -7,6 +7,8 @@
 
 #include "screen.h"
 #include "game.h"
+#include "sched.h"
+#include "defines.h"
 
 char reloj_ascii[4] = {(char)'|', (char)'/', (char)'-', (char)'\\'};
 
@@ -301,7 +303,7 @@ void print_debug_screen(unsigned int edi,unsigned int esi,unsigned int ebp,unsig
     for(i = 25; i < 55; i++) {
       //y ahora agarro las filas
       for(j = 7; j < 42; j++) {
-        p[j][i].a = C_FG_LIGHT_GREY;
+        p[j][i].a = C_BG_LIGHT_GREY + C_FG_LIGHT_GREY;
       }
     }
     //bordes negros
@@ -315,10 +317,25 @@ void print_debug_screen(unsigned int edi,unsigned int esi,unsigned int ebp,unsig
     }
 
     //barra del titulo de la tarea
+    unsigned short color = jugadorActual() == JUGADOR_A ? C_FG_RED : C_FG_BLUE;
     for(i = 26; i < 55; i++){
-      p[8][i].a = C_FG_BROWN;
+      p[8][i].a = color;
     }
-    //PRINT ACA DE LA TAREA QUE SE ROMPIO SOBRE LA BARRA IMPRESA JUSTO ANTERIOR A ESTO (usar C_BG + C_FG, como abajo)
+    unsigned int indice = jugadorActual() == JUGADOR_A ? tarea_actual_A() : tarea_actual_B();
+    zombie_tipo zombi = jugadorActual() == JUGADOR_A ? zombiesA[indice].tipo : zombiesB[indice].tipo;
+    if(jugadorActual() == JUGADOR_A){ 
+        switch(zombi){
+            case GUERRERO: print("Zombi A Guerrero",26,8, C_BG_RED + C_FG_WHITE); break;
+            case MAGO: print("Zombi A Mago",26,8, C_BG_RED + C_FG_WHITE); break;
+            case CLERIGO: print("Zombi A Clerigo",26,8, C_BG_RED + C_FG_WHITE); break;
+        }
+    } else {
+        switch(zombi){
+            case GUERRERO: print("Zombi B Guerrero",26,8, C_BG_BLUE + C_FG_WHITE); break;
+            case MAGO: print("Zombi B Mago",26,8, C_BG_BLUE + C_FG_WHITE); break;
+            case CLERIGO: print("Zombi B Clerigo",26,8, C_BG_BLUE + C_FG_WHITE); break;
+        }
+    }
 
     print("eax", 27, 10, C_BG_LIGHT_GREY + C_FG_BLACK);
     print_hex(eax,8,31,10,C_BG_LIGHT_GREY + C_FG_WHITE);
@@ -342,13 +359,13 @@ void print_debug_screen(unsigned int edi,unsigned int esi,unsigned int ebp,unsig
     print("cs", 28, 28, C_BG_LIGHT_GREY + C_FG_BLACK);
     print_hex(cs,8,31,28,C_BG_LIGHT_GREY + C_FG_WHITE);
     print("ds", 28, 30, C_BG_LIGHT_GREY + C_FG_BLACK);
-    //print_hex(PONER ACA DS,8,31,30,C_BG_LIGHT_GREY + C_FG_WHITE);
+    print_hex((GDT_DATA_3<<3)|3,8,31,30,C_BG_LIGHT_GREY + C_FG_WHITE);
     print("es", 28, 32, C_BG_LIGHT_GREY + C_FG_BLACK);
-    //print_hex(PONER ACA ES,8,31,32,C_BG_LIGHT_GREY + C_FG_WHITE);
+    print_hex((GDT_DATA_3<<3)|3,8,31,32,C_BG_LIGHT_GREY + C_FG_WHITE);
     print("fs", 28, 34, C_BG_LIGHT_GREY + C_FG_BLACK);
-    //print_hex(PONER ACA FS,8,31,34,C_BG_LIGHT_GREY + C_FG_WHITE);
+    print_hex((GDT_DATA_3<<3)|3,8,31,34,C_BG_LIGHT_GREY + C_FG_WHITE);
     print("gs", 28, 36, C_BG_LIGHT_GREY + C_FG_BLACK);
-    //print_hex(PONER ACA GS,8,31,36,C_BG_LIGHT_GREY + C_FG_WHITE);
+    print_hex((GDT_DATA_3<<3)|3,8,31,36,C_BG_LIGHT_GREY + C_FG_WHITE);
     print("ss", 28, 38, C_BG_LIGHT_GREY + C_FG_BLACK);
     print_hex(ss,8,31,38,C_BG_LIGHT_GREY + C_FG_WHITE);
 
