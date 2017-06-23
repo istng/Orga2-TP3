@@ -293,41 +293,99 @@ void unprint_reloj_zombie(jugador jug, unsigned int indice){
 void print_debug_screen(unsigned int edi,unsigned int esi,unsigned int ebp,unsigned int esteNo,unsigned int ebx,   \
     unsigned int edx,unsigned int ecx,unsigned int eax,unsigned int ss,unsigned int esp, unsigned int eflags,   \
     unsigned int cs,unsigned int eip, unsigned int error_code){
-    print_hex(eax,8,30,20,C_FG_WHITE);
-    print_hex(ebx,8,30,21,C_FG_WHITE);
-    print_hex(ecx,8,30,22,C_FG_WHITE);
-    print_hex(edx,8,30,23,C_FG_WHITE);
-    print_hex(esi,8,30,24,C_FG_WHITE);
-    print_hex(edi,8,30,25,C_FG_WHITE);
-    print_hex(ebp,8,30,26,C_FG_WHITE);
-    print_hex(esp,8,30,27,C_FG_WHITE);
-    print_hex(eip,8,30,28,C_FG_WHITE);
-    print_hex(ss,8,30,29,C_FG_WHITE);
-    print_hex(cs,8,30,30,C_FG_WHITE);
-    print_hex(eflags,8,30,31,C_FG_WHITE);
-    print_hex(error_code,8,30,32,C_FG_WHITE);
-    print("aca", 30, 32, C_FG_WHITE);
-    print_hex(rcr0(),8,30,33,C_FG_WHITE);
-    print_hex(rcr2(),8,30,34,C_FG_WHITE);
-    print_hex(rcr3(),8,30,35,C_FG_WHITE);
-    print_hex(rcr4(),8,30,36,C_FG_WHITE);
+    
+    ca (*p)[VIDEO_COLS] = (ca (*)[VIDEO_COLS]) VIDEO; // magia || arreglo de filas
 
+    unsigned int i,j;
+    //printeo por columnas
+    for(i = 25; i < 55; i++) {
+      //y ahora agarro las filas
+      for(j = 7; j < 42; j++) {
+        p[j][i].a = C_FG_LIGHT_GREY;
+      }
+    }
+    //bordes negros
+    for(i = 25; i < 55; i++){
+      p[7][i].a = C_FG_BLACK;
+      p[42][i].a = C_FG_BLACK;
+    }
+    for(j = 7; j < 43; j++){
+      p[j][25].a = C_FG_BLACK;
+      p[j][55].a = C_FG_BLACK;
+    }
+
+    //barra del titulo de la tarea
+    for(i = 26; i < 55; i++){
+      p[8][i].a = C_FG_BROWN;
+    }
+    //PRINT ACA DE LA TAREA QUE SE ROMPIO SOBRE LA BARRA IMPRESA JUSTO ANTERIOR A ESTO (usar C_BG + C_FG, como abajo)
+
+    print("eax", 27, 10, C_BG_LIGHT_GREY + C_FG_BLACK);
+    print_hex(eax,8,31,10,C_BG_LIGHT_GREY + C_FG_WHITE);
+    print("ebx", 27, 12, C_BG_LIGHT_GREY + C_FG_BLACK);
+    print_hex(ebx,8,31,12,C_BG_LIGHT_GREY + C_FG_WHITE);
+    print("ecx", 27, 14, C_BG_LIGHT_GREY + C_FG_BLACK);
+    print_hex(ecx,8,31,14,C_BG_LIGHT_GREY + C_FG_WHITE);
+    print("edx", 27, 16, C_BG_LIGHT_GREY + C_FG_BLACK);
+    print_hex(edx,8,31,16,C_BG_LIGHT_GREY + C_FG_WHITE);
+    print("esi", 27, 18, C_BG_LIGHT_GREY + C_FG_BLACK);
+    print_hex(esi,8,31,18,C_BG_LIGHT_GREY + C_FG_WHITE);
+    print("edi", 27, 20, C_BG_LIGHT_GREY + C_FG_BLACK);
+    print_hex(edi,8,31,20,C_BG_LIGHT_GREY + C_FG_WHITE);
+    print("ebp", 27, 22, C_BG_LIGHT_GREY + C_FG_BLACK);
+    print_hex(ebp,8,31,22,C_BG_LIGHT_GREY + C_FG_WHITE);
+    print("esp", 27, 24, C_BG_LIGHT_GREY + C_FG_BLACK);
+    print_hex(esp,8,31,24,C_BG_LIGHT_GREY + C_FG_WHITE);
+    print("eip", 27, 26, C_BG_LIGHT_GREY + C_FG_BLACK);
+    print_hex(eip,8,31,26,C_BG_LIGHT_GREY + C_FG_WHITE);
+
+    print("cs", 28, 28, C_BG_LIGHT_GREY + C_FG_BLACK);
+    print_hex(cs,8,31,28,C_BG_LIGHT_GREY + C_FG_WHITE);
+    print("ds", 28, 30, C_BG_LIGHT_GREY + C_FG_BLACK);
+    //print_hex(PONER ACA DS,8,31,30,C_BG_LIGHT_GREY + C_FG_WHITE);
+    print("es", 28, 32, C_BG_LIGHT_GREY + C_FG_BLACK);
+    //print_hex(PONER ACA ES,8,31,32,C_BG_LIGHT_GREY + C_FG_WHITE);
+    print("fs", 28, 34, C_BG_LIGHT_GREY + C_FG_BLACK);
+    //print_hex(PONER ACA FS,8,31,34,C_BG_LIGHT_GREY + C_FG_WHITE);
+    print("gs", 28, 36, C_BG_LIGHT_GREY + C_FG_BLACK);
+    //print_hex(PONER ACA GS,8,31,36,C_BG_LIGHT_GREY + C_FG_WHITE);
+    print("ss", 28, 38, C_BG_LIGHT_GREY + C_FG_BLACK);
+    print_hex(ss,8,31,38,C_BG_LIGHT_GREY + C_FG_WHITE);
+
+    print("eflags", 28, 40, C_BG_LIGHT_GREY + C_FG_BLACK);
+    print_hex(eflags,8,34,40, C_BG_LIGHT_GREY + C_FG_WHITE);
+
+
+    //print_hex(error_code,8,30,32,C_FG_WHITE); //que onda el error_code? no aparece en el enunciado, creo
+    
+    print("cr0", 41, 10, C_BG_LIGHT_GREY + C_FG_BLACK);
+    print_hex(rcr0(),8,45,10,C_BG_LIGHT_GREY + C_FG_WHITE);
+    print("cr2", 41, 12, C_BG_LIGHT_GREY + C_FG_BLACK);
+    print_hex(rcr2(),8,45,12,C_BG_LIGHT_GREY + C_FG_WHITE);
+    print("cr3", 41, 14, C_BG_LIGHT_GREY + C_FG_BLACK);
+    print_hex(rcr3(),8,45,14,C_BG_LIGHT_GREY + C_FG_WHITE);
+    print("cr0", 41, 16, C_BG_LIGHT_GREY + C_FG_BLACK);
+    print_hex(rcr4(),8,45,16,C_BG_LIGHT_GREY + C_FG_WHITE);
+
+
+
+    print("stack", 41, 27, C_BG_LIGHT_GREY + C_FG_BLACK);
     unsigned int* stack_top = (unsigned int*)esp;
 
     if((unsigned int)stack_top != ebp) {
-        print_hex(*stack_top-4,8,30,37,C_FG_WHITE);
+        print_hex(*stack_top-4,8,41,30,C_BG_LIGHT_GREY + C_FG_WHITE);
     }
 
     if((unsigned int)stack_top != ebp) {
-        print_hex(*stack_top-8,8,30,38,C_FG_WHITE);
+        print_hex(*stack_top-8,8,41,31,C_BG_LIGHT_GREY + C_FG_WHITE);
     }
 
     if((unsigned int)stack_top != ebp) {
-        print_hex(*stack_top-12,8,30,39,C_FG_WHITE);
+        print_hex(*stack_top-12,8,41,32,C_BG_LIGHT_GREY + C_FG_WHITE);
     }
 
     if((unsigned int)stack_top != ebp) {
-        print_hex(*stack_top-16,8,30,40,C_FG_WHITE);
+        print_hex(*stack_top-16,8,41,33,C_BG_LIGHT_GREY + C_FG_WHITE);
     }
 }
 
