@@ -293,15 +293,42 @@ void unprint_reloj_zombie(jugador jug, unsigned int indice){
 void print_debug_screen(unsigned int edi,unsigned int esi,unsigned int ebp,unsigned int esteNo,unsigned int ebx,   \
     unsigned int edx,unsigned int ecx,unsigned int eax,unsigned int ss,unsigned int esp, unsigned int eflags,   \
     unsigned int cs,unsigned int eip, unsigned int error_code){
-    print_hex(eax,8,10,30,C_FG_WHITE);
-    print_hex(ebx,8,12,30,C_FG_WHITE);
-    print_hex(ecx,8,14,30,C_FG_WHITE);
-    print_hex(edx,8,16,30,C_FG_WHITE);
-    print_hex(esi,8,18,30,C_FG_WHITE);
-    print_hex(edi,8,20,30,C_FG_WHITE);
-    print_hex(ebp,8,22,30,C_FG_WHITE);
-    print_hex(esp,8,24,30,C_FG_WHITE);
-    print_hex(eip,8,26,30,C_FG_WHITE);
+    print_hex(eax,8,30,20,C_FG_WHITE);
+    print_hex(ebx,8,30,21,C_FG_WHITE);
+    print_hex(ecx,8,30,22,C_FG_WHITE);
+    print_hex(edx,8,30,23,C_FG_WHITE);
+    print_hex(esi,8,30,24,C_FG_WHITE);
+    print_hex(edi,8,30,25,C_FG_WHITE);
+    print_hex(ebp,8,30,26,C_FG_WHITE);
+    print_hex(esp,8,30,27,C_FG_WHITE);
+    print_hex(eip,8,30,28,C_FG_WHITE);
+    print_hex(ss,8,30,29,C_FG_WHITE);
+    print_hex(cs,8,30,30,C_FG_WHITE);
+    print_hex(eflags,8,30,31,C_FG_WHITE);
+    print_hex(error_code,8,30,32,C_FG_WHITE);
+    print("aca", 30, 32, C_FG_WHITE);
+    print_hex(rcr0(),8,30,33,C_FG_WHITE);
+    print_hex(rcr2(),8,30,34,C_FG_WHITE);
+    print_hex(rcr3(),8,30,35,C_FG_WHITE);
+    print_hex(rcr4(),8,30,36,C_FG_WHITE);
+
+    unsigned int* stack_top = (unsigned int*)esp;
+
+    if((unsigned int)stack_top != ebp) {
+        print_hex(*stack_top-4,8,30,37,C_FG_WHITE);
+    }
+
+    if((unsigned int)stack_top != ebp) {
+        print_hex(*stack_top-8,8,30,38,C_FG_WHITE);
+    }
+
+    if((unsigned int)stack_top != ebp) {
+        print_hex(*stack_top-12,8,30,39,C_FG_WHITE);
+    }
+
+    if((unsigned int)stack_top != ebp) {
+        print_hex(*stack_top-16,8,30,40,C_FG_WHITE);
+    }
 }
 
 

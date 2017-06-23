@@ -196,7 +196,7 @@ void accion_tecla(char scan_code){
               case TRUE:
                 screen_cargar();
                 swicth_modo_debug();
-                hay_pantalla_debug = FALSE;
+                switch_hay_interrupcion();
                 break;
               case FALSE:
                 swicth_modo_debug();

@@ -450,11 +450,11 @@ void swicth_modo_debug(){
 	switch (estado_debug) {
 		case DESACTIVADO:
 			estado_debug = ACTIVADO;
-			print("activado",0,1,30); 
+			//print("activado",0,1,30); 
 			break;
 		case ACTIVADO: 
 			estado_debug = DESACTIVADO;
-			print("desactivado",0,1,30);
+			//print("desactivado",0,1,30);
 			break;
 	}
 }
@@ -463,11 +463,11 @@ void switch_hay_interrupcion(){
 	switch (hay_interrupcion_en_pantalla) {
 		case TRUE:
 			hay_interrupcion_en_pantalla = FALSE;
-			print("hay una interrupcion",1,1,30);  
+			//print("hay una interrupcion",1,1,30);  
 			break;
 		case FALSE: 
 			hay_interrupcion_en_pantalla = TRUE;
-			print("no hay una interrupcion",1,1,30);
+			//print("no hay una interrupcion",1,1,30);
 			break;
 	}
 }

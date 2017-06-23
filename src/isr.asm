@@ -106,9 +106,9 @@ _isr%1:
     cmp eax,0
     je .seguir
 
+    call screen_guardar
     call switch_hay_interrupcion
     call print_debug_screen
-    call screen_guardar
     jmp .fin
 
     .seguir:
