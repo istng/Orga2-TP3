@@ -73,7 +73,7 @@ mensaje_intr_len equ    $ - mensaje_intr
     dec ebx
     add al, 48
     mov [ebx], al ; se reemplaza X por la centena del numero de interrupcion
-    imprimir_texto_mp mensaje_intr, mensaje_intr_len, 0x07, 0, 34
+    imprimir_texto_mp mensaje_intr, mensaje_intr_len, 0x07, 0, 0
 %endmacro
 
 

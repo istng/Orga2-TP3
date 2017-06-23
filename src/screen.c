@@ -158,35 +158,35 @@ void print_screen(){
 	p[46][74].c = 56;
 	p[46][74].a = C_FG_WHITE;
   p[48][74].c = 88;
-  p[48][74].a = C_FG_RED;
+  p[48][74].a = C_FG_BLUE;
 	p[46][72].c = 55;
 	p[46][72].a = C_FG_WHITE;
   p[48][72].c = 88;
-  p[48][72].a = C_FG_RED;
+  p[48][72].a = C_FG_BLUE;
 	p[46][70].c = 54;
 	p[46][70].a = C_FG_WHITE;
   p[48][70].c = 88;
-  p[48][70].a = C_FG_RED;
+  p[48][70].a = C_FG_BLUE;
 	p[46][68].c = 53;
 	p[46][68].a = C_FG_WHITE;
   p[48][68].c = 88;
-  p[48][68].a = C_FG_RED;
+  p[48][68].a = C_FG_BLUE;
 	p[46][66].c = 52;
 	p[46][66].a = C_FG_WHITE;
   p[48][66].c = 88;
-  p[48][66].a = C_FG_RED;
+  p[48][66].a = C_FG_BLUE;
 	p[46][64].c = 51;
 	p[46][64].a = C_FG_WHITE;
   p[48][64].c = 88;
-  p[48][64].a = C_FG_RED;
+  p[48][64].a = C_FG_BLUE;
 	p[46][62].c = 50;
 	p[46][62].a = C_FG_WHITE;
   p[48][62].c = 88;
-  p[48][62].a = C_FG_RED;
+  p[48][62].a = C_FG_BLUE;
 	p[46][60].c = 49;
 	p[46][60].a = C_FG_WHITE;
   p[48][60].c = 88;
-  p[48][60].a = C_FG_RED;
+  p[48][60].a = C_FG_BLUE;
 
   //puntos
   print_int(0,36,47,0x4F);
@@ -289,7 +289,8 @@ void print_reloj_zombie(jugador jug, unsigned int indice){
 
 void unprint_reloj_zombie(jugador jug, unsigned int indice){
     unsigned short fila_offset = jug == JUGADOR_A ? 4 : 60;
-    print("X", fila_offset + 2 * indice, 48, C_FG_RED);
+    unsigned short color = jugadorActual() == JUGADOR_A ? C_FG_RED : C_FG_BLUE;
+    print("X", fila_offset + 2 * indice, 48, color);
 }
 
 void print_debug_screen(unsigned int edi,unsigned int esi,unsigned int ebp,unsigned int esteNo,unsigned int ebx,   \
