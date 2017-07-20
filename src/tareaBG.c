@@ -11,15 +11,10 @@
 
 void task() {
     /* Tarea */
-    int i;
-    for(i=0;i<10000;i++) {
-      syscall_mover(ADE);
-      syscall_mover(DER);
-      syscall_mover(ADE);
-      syscall_mover(ADE);
-      syscall_mover(IZQ);
+    while(1){
       syscall_mover(ADE);
     }
+
 
   while(1) { __asm __volatile("mov $2, %%eax":::"eax"); }
 }

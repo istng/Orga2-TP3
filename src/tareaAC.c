@@ -12,16 +12,25 @@
 void task() {
     /* Tarea */
     int i;
-    for(i=0;i<10;i++)
+    for(i=0;i<13;i++)
     syscall_mover(ADE);
-    for(i=0;i<10;i++)
-    syscall_mover(DER);
-    for(i=0;i<5;i++)
-    syscall_mover(ATR);
-    for(i=0;i<5;i++)
-    syscall_mover(IZQ);
-    for(i=0;i<500;i++)
-    syscall_mover(ATR);
-    
+
+    int cambio = 0;
+    while(1) {
+
+        if(cambio == 0){
+            for(i=0;i<13;i++){
+                syscall_mover(DER);
+            }
+            cambio = 1;
+        }
+        else{
+            for(i=0;i<13;i++) {
+                syscall_mover(IZQ);
+            }
+            cambio = 0;
+        }
+    }
+
   while(1) { __asm __volatile("mov $2, %%eax":::"eax"); }
 }
